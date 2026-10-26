@@ -116,7 +116,6 @@ QualitySettings:
     - Android
     - iPhone
     - tvOS
-    - WebGL
     - Nintendo Switch
     - Nintendo Switch 2
   m_TextureMipmapLimitGroupNames: []
