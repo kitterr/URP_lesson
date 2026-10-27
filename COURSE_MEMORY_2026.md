@@ -89,7 +89,7 @@
 - D01 阶段四：用户提供的运行时日志显示 Current Quality Level: PC、SRP Enabled: True、Active Render Pipeline Asset: PC_RPAsset、Asset Type 为 UniversalRenderPipelineAsset；无新红色错误。
 - D02 已进行 CPU/GPU、Camera Culling、几何裁剪、透视除法和视口变换等基础讨论。用户报告 Shader 编译成功、材质应用成功、Transform 实验正常，并表示理解 TransformObjectToWorld 的作用。
 - **当前课程调整：** 用户提出实现一个加载 FBX、建立 Camera 并自行完成矩阵变换到屏幕的小项目。已决定新增 Mini Software Renderer 配套实战，详见 MINI_SOFTWARE_RENDERER_PLAN.md。该计划尚未实现，不能把任何 MSR 阶段标记为完成。
-- **MSR-01 最新进度（2026-10-27）：** 已完成并验收：Texture2D + Color32[] CPU 像素缓冲、四象限颜色写入、SetPixels32/Apply/RawImage 显示链路、1D 索引与 2D 坐标互转（例如 width=256、i=513 得到 x=1、y=2）、安全 SetPixel(x,y,color) 的边界检查。测试证据来自用户实际运行反馈：四象限正常显示；纯洋红色测试确认显示链路可用；合法坐标写入白点成功；SetPixel(-1,0,...) 被拦截并输出警告、没有数组越界异常；恢复合法坐标后画面正常。未确认代码已提交 Git，也未收到截图，因此不记录截图/commit 证据。
+- **MSR-01 最新进度（2026-10-27）：** 已完成并验收：Texture2D + Color32[] CPU 像素缓冲、四象限颜色写入、SetPixels32/Apply/RawImage 显示链路、1D 索引与 2D 坐标互转（例如 width=256、i=513 得到 x=1、y=2）、安全 SetPixel(x,y,color) 的边界检查。测试证据来自用户实际运行反馈：四象限正常显示；纯洋红色测试确认显示链路可用；合法坐标写入白点成功；SetPixel(-1,0,...) 被拦截并输出警告、没有数组越界异常；恢复合法坐标后画面正常。课程日志已保存至 [MSR_LOG_2026-10-27.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-10-27.md)。日志记录的是学习进度，未收到 Unity 截图或项目源码，不声称这些内容已上传。
 - **教学方式（用户明确要求）：** 对复杂知识进行详细、循序渐进的讲解，解释为什么需要、数据输入/输出、内部步骤、易混淆概念和常见错误；提供相关图示、文章/视频链接和观看重点。每次给 C# 代码必须讲解相关语法、执行顺序及 Unity API 的输入/输出和调用时机。
 - 版本配置与仓库配置可能存在差异；未核实前不擅自修改项目设置。公司旧项目仍是 Unity 2022.3.62f1 + URP，不默认兼容 Unity 6 教学代码。
 - 计划时间：北京时间每天 10:00 推送；工作日每天 3 小时，周末两天合计约 5 小时（默认每天 2.5 小时）。课程按验收推进，不为赶日期跳过概念。
