@@ -34,10 +34,10 @@
 ## 3. 课程总表（待按验收动态调整）
 | 周次 | 日期 | 课程 | 关键知识、当周产出 |
 | --- | --- | --- | --- |
-| 1 | 10/25–10/30 | D01–D04 | Unity/URP 环境锁定、CPU→GPU→像素的管线、Draw Call、Frame Debugger、Render Graph Viewer；**架构流程图** |
-| 2 | 10/31–11/06 | D05–D08、T01 | 向量和坐标空间、相机投影与矩阵、ZTest/ZWrite/Stencil、Linear/Gamma/HDR/Blend；**遮挡与混合排错** |
-| 3 | 11/07–11/13 | D09–D12、T02 | ShaderLab、Unlit HLSL、顶点/片元、法线/光照、渲染状态；**Shader 独立编写及故障排查** |
-| 4 | 11/14–11/20 | D13–D16、T03 | URP Asset、Renderer Data、Universal Renderer、Camera 与 Pass、RendererFeature 生命周期、注入时机；**URP 架构图** |
+| 1 | 10/25–10/30 | D01–D04、MSR-01 | Unity/URP 环境锁定、CPU→GPU→像素的管线、Draw Call；MSR-01 建立 CPU Framebuffer 与屏幕空间三角形；**架构流程图 + 第一张软件绘制图像** |
+| 2 | 10/31–11/06 | D05–D08、T01、MSR-02/03 | 向量/坐标空间、矩阵与投影、深度/颜色；MSR-02 Object→World，MSR-03 Software Camera 与投影；**遮挡与混合排错 + 变换可视化** |
+| 3 | 11/07–11/13 | D09–D12、T02、MSR-04/05 | ShaderLab、Unlit HLSL、顶点/片元、渲染状态；MSR-04 Clip Space 裁剪/光栅化/插值，MSR-05 深度与 UV；**Shader 独立编写及故障排查** |
+| 4 | 11/14–11/20 | D13–D16、T03、MSR-06 | URP Asset、Renderer Data、Camera 与 Pass、RendererFeature 生命周期；MSR-06 导入 FBX Mesh 并整合软件渲染管线；**URP 架构图 + 软件渲染器综合验收** |
 | 5 | 11/21–11/27 | D17–D20、T04 | Render Graph、Pass/资源声明、RecordRenderGraph、AddRasterRenderPass、PassData、TextureHandle、ContextContainer、UniversalResourceData、全屏处理；**最小自定义 Pass** |
 | 6 | 11/28–12/04 | D21–D24、T05 | Feature+Pass、Camera 过滤、RendererList、Layer Mask、Override Material、Inspector 和生命周期；**可配置对象筛选 Feature** |
 | 7 | 12/05–12/11 | D25–D28、T06 | 深度/法线输入、对象 Mask、Edge Detection、多 Pass、依赖与 Pass Culling；**描边原型** |
@@ -58,6 +58,21 @@
 - D37 毕业项目架构设计；D38 独立对象 Mask Pass；D39 轮廓与合成；D40 兼容性、性能、README 和交付。
 - **优先级**：理解渲染流水线、数学/Shader、URP 架构、Render Graph、自主排错 > 赶课；当时间不足，可压缩 Compute Shader 与 Camera/Volume 进阶。不把示例代码能运行当成真正会了。
 
+
+## 3A. Mini Software Renderer 配套实战（2026-10-27 新增）
+
+**调整决定：** 在现有 D01–D40 + T01–T08 主线旁增加 6 个有验收标准的 Mini Software Renderer（MSR）实践阶段。主线目标不删减，软件渲染器不代替 HLSL、GPU、URP、Render Graph 或性能分析课程。完整阶段、实现顺序、验收和参考资料见 [MINI_SOFTWARE_RENDERER_PLAN.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MINI_SOFTWARE_RENDERER_PLAN.md)。
+
+- MSR-01：CPU Framebuffer 与屏幕空间三角形；先验证 CPU 如何写像素。
+- MSR-02：Mesh 顶点/索引与 Object→World；手写三角形后读取 Unity 已导入的 Mesh。
+- MSR-03：Software Camera、View/Projection、透视除法与 Viewport Transform。
+- MSR-04：Clip Space 裁剪、光栅化、重心坐标与属性插值。
+- MSR-05：Depth Buffer、遮挡、UV、纹理采样和透视校正插值。
+- MSR-06：导入 FBX Mesh，整合管线并与 Unity GPU 渲染结果做差异分析。
+
+**工程边界：** 不手写 FBX 文件解析器；使用 Unity FBX Importer 加载资产。渲染计算主要由 C# 在 CPU 上执行，Texture2D 仅用于展示结果。每个阶段预计 2–4 小时，可拆分学习；按每周约 20 小时预算嵌入现有课程。先讲原因、图示、必要公式、C# 语法/API，再动手验收；每次只教一个阶段。
+
+
 ## 4. 版本核对规则
 - D01 必须从实际 `ProjectSettings/ProjectVersion.txt`、`Packages/manifest.json` 和 Package Manager 验证并**锁定真实 Unity Editor、URP Package、Graphics API**；仓库与学习者本地可能不一致。
 - 仅以锁定版本的官方 API 为准，主线使用 Unity 6 URP Render Graph；关闭 Compatibility Mode (Render Graph Disabled)。旧版 `Execute()`/传统 `Blit()` 示例只能用来比较，不作为现代课程代码。
@@ -66,19 +81,19 @@
 ## 5. 能力验收：课程内部 L8
 毕业项目计 100 分：架构和时序 20、Render Graph 依赖与生命周期 25、Shader/视觉正确性 15、Camera/对象筛选与集成 10、调试和性能对照 15、代码/文档/工程权衡 15。目标 >=80，且不允许有严重的资源/时序错误。此分数只证明这套课程定义的独立实战能力，**不等价于业界 8 年经验或可以重写完整 SRP**。
 
-## 6. 当前状态（截至 2026-10-26）
-- 用户将 2026-10-26 重新定义为 **Day 1 / D01**；D01 已完成四个阶段并通过验收。用户要求一次只讲一个阶段，提交反馈后只验收当前阶段，不提前发下一阶段。
-- **D01 阶段一：通过（用户报告）**。Unity Editor：6000.6.7f1；URP Package：17.6.0；目标平台：Windows；Auto Graphics API：已勾选；Graphics API 列表由用户记为“D12”（按用户原始记录保留，未进一步确认具体 API 全称）。
-- **D01 阶段二：通过（用户报告）**。Graphics → Default Render Pipeline 为 PC_RPAsset；Quality → PC 的 Render Pipeline Asset 为 PC_RPAsset；Windows 默认质量等级为 PC；Editor 当前质量等级为 PC。此前仓库中的 ProjectSettings/GraphicsSettings.asset 与用户本地 Inspector 截图所见的 Graphics 默认管线配置存在差异；未修改项目配置，后续如有需要再核对。
-- **D01 阶段三：通过（用户报告）**。场景保存为 D01_URP_Check；Cube 与 Plane 在 Game View 正常显示；Console 没有新的红色错误。用户确认完成，但未把该场景或截图提交到仓库，因此这条记录代表对话中的实际报告，不代表 Git 分支已包含场景文件。
-- **D01 阶段四：通过（用户提交 Console 截图）**。运行时日志为 Current Quality Level: PC；SRP Enabled: True；Active Render Pipeline Asset: PC_RPAsset；Asset Type: UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset；无新红色错误。运行时检查确认当前使用 URP Asset。
-- **当前课：D02 阶段一，进行中 / 待补充验收**。主题是一帧画面的产生、CPU/GPU 分工、Camera Culling、GPU 图形处理流程。用户初步理解：CPU 组织物体绘制，静态 Mesh/贴图通常不需每帧重新上传；GPU 处理顶点、光栅化、属性插值、贴图采样与着色；但 Clip Space、几何裁剪、透视除法、视口变换之间仍有概念混淆。
-- D02 阶段一补充题尚未通过。待用户学习后重新解释：① CPU 视锥剔除依据包围体判断是否排除整个物体；② GPU 对跨越可见边界的三角形进行几何裁剪；③ Clip Space 到屏幕像素之间，透视除法与视口变换的作用。用户表示会在 2026-10-27 学习后回答；收到答案前不得标记通过或进入下一阶段。
-- **教学风格更新（用户明确要求）**：当前讲解过于简略，容易让知识点显得模糊。后续需要更详细、循序渐进地解释原理与因果关系，提供对应图示、公式解释、实际例子、资料/文章/视频链接及观看重点。每次提供 C# 代码时同时解释语法与 API。用户有一些 3D/Houdini 背景，但不能假定其已掌握图形学、GPU、矩阵或 HLSL 基础。
-- 版本锁定：用户已报告本地 Editor 6000.6.7f1、URP 17.6.0、Windows、Graphics API 记录为 D12；这些信息以用户报告为依据。仓库配置与本机实际设置的差异仍需保留为未解决备注，不要擅自修改。
-- 计划推送：每日 URP TA 课程计划为北京时间 10:00，周一至周五每天 3 小时，周末两天合计约 5 小时（默认每天 2.5 小时）。自动任务与 GitHub 文件不会自动同步；仅在明确写入仓库后更新本文件与日志。
-- 毕业项目：尚未启动。
-- 下一步：继续 D02 阶段一补充验收；先详细讲清楚剩余概念并核对用户答案，再决定是否通过。不要直接进入 D02 阶段二。
+## 6. 当前状态（截至 2026-10-27）
+- 用户将 2026-10-26 重新定义为 Day 1 / D01；D01 四个阶段已通过验收。
+- D01 环境：Unity Editor 6000.6.7f1；URP Package 17.6.0；Windows；Auto Graphics API 已勾选；Graphics API 列表由用户记为“D12”，具体全称未进一步确认。
+- D01 阶段二：Graphics 默认管线与 Quality/PC 管线资源均为 PC_RPAsset；Windows 默认质量等级和 Editor 当前质量等级均为 PC。
+- D01 阶段三：测试场景已保存，Game View 正常，未出现新的红色错误。场景文件/截图未确认已提交到 Git。
+- D01 阶段四：用户提供的运行时日志显示 Current Quality Level: PC、SRP Enabled: True、Active Render Pipeline Asset: PC_RPAsset、Asset Type 为 UniversalRenderPipelineAsset；无新红色错误。
+- D02 已进行 CPU/GPU、Camera Culling、几何裁剪、透视除法和视口变换等基础讨论。用户报告 Shader 编译成功、材质应用成功、Transform 实验正常，并表示理解 TransformObjectToWorld 的作用。
+- **当前课程调整：** 用户提出实现一个加载 FBX、建立 Camera 并自行完成矩阵变换到屏幕的小项目。已决定新增 Mini Software Renderer 配套实战，详见 MINI_SOFTWARE_RENDERER_PLAN.md。该计划尚未实现，不能把任何 MSR 阶段标记为完成。
+- **当前学习起点：** 从 MSR-01（CPU Framebuffer 与屏幕空间三角形）开始；仍按阶段教学，当前阶段未验收不得发下一阶段。MSR-01 需要先确认 Unity 工程中显示 Texture2D 的最小场景，再解释每个 C# 语法/API。
+- **教学方式（用户明确要求）：** 对复杂知识进行详细、循序渐进的讲解，解释为什么需要、数据输入/输出、内部步骤、易混淆概念和常见错误；提供相关图示、文章/视频链接和观看重点。每次给 C# 代码必须讲解相关语法、执行顺序及 Unity API 的输入/输出和调用时机。
+- 版本配置与仓库配置可能存在差异；未核实前不擅自修改项目设置。公司旧项目仍是 Unity 2022.3.62f1 + URP，不默认兼容 Unity 6 教学代码。
+- 计划时间：北京时间每天 10:00 推送；工作日每天 3 小时，周末两天合计约 5 小时（默认每天 2.5 小时）。课程按验收推进，不为赶日期跳过概念。
+- 下一步：开始 MSR-01 的第一个教学阶段；只讲当前阶段，等待用户反馈和验收后再继续。
 
 ## 7. 每日学习日志模板（每次真实完成后追加）
 ```
