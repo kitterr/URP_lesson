@@ -145,3 +145,7 @@
 - 用户实际运行反馈：移除 `SoftwareFramebufferDemo` 组件后，RawImage 的纹理引用成功清空，Console 没有任何异常。当前 `OnDestroy()` 子步骤已验收通过：先检查 `output != null && output.texture == framebuffer` 并解除 RawImage 引用，再 `Destroy(framebuffer)`，最后清空 `framebuffer` 和 `pixels`。详情见 [MSR_LOG_2026-10-27.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-10-27.md)。
 - 用户决定保留空的 `Update()` 作为未来测试入口。尊重此决定，不再要求删除；记录为有意保留，而不是未完成缺陷。
 - 当前阶段仍未整体通过。下一步检查初始化代码中运行时 `Texture2D` 的创建及 `output.texture` 赋值，确认创建—上传—显示—销毁生命周期闭合；只检查该子步骤，不进入三角形绘制。用户需要提供相关初始化代码后再进行代码级验收。
+
+
+## 13. 像素坐标复习状态（2026-10-29）
+用户表示已理解 `BgColored()` 中非正方形 framebuffer 的行坐标应使用 `i / width` 而不是 `i / height`；未报告实际运行对照，因此仅记为概念理解确认，不声称运行时测试通过。用户明确说明三角形绘制已经学过；叉乘符号、三边测试、area/顶点绕序、像素中心采样、包围盒和边界检查的口头复习基本正确。下一步仍先完成 MSR-01 验收：确认 `DrawTriangle` 输入为屏幕像素坐标而非世界坐标，并核对改变顶点坐标后的实际显示；不提前进入 MSR-02，直到当前阶段验收有明确记录。
