@@ -1,99 +1,168 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SoftwareFramebufferDemo : MonoBehaviour
 {
-    public int width = 128;  
-    public int height = 128;
+    [Min(1)] public int width = 128;
+    [Min(1)] public int height = 128;
+    public RawImage output;
+
+    [Header("Transform")]
+    [Range(0.1f, 1f)] public float scale = 1f;
+    public float rotationSpeed = 6f;
+
     private Texture2D framebuffer;
     private Color32[] pixels;
-    public RawImage output;
-    void Start()
+
+    // 原始顶点永远不被矩阵计算结果覆盖
+    private Vector2[] originalPoints;
+    private Vector2[] points;
+
+    private float angleDegrees = 0f;
+
+    private void Start()
     {
         if (output == null)
         {
-            Debug.LogError("rawImage 没有指定");
+            Debug.LogError("RawImage 没有指定", this);
+            enabled = false;
+            return;
         }
 
-        Color32 yellow = new Color32(255, 255, 0, 255);
-        Color32 red = new Color32(255, 0, 0, 255);
-        Color32 green = new Color32(0, 255, 0, 255);
-        Color32 blue = new Color32(0, 0, 255, 255);
+        if (width <= 0 || height <= 0)
+        {
+            Debug.LogError("Framebuffer 的宽高必须大于 0", this);
+            enabled = false;
+            return;
+        }
 
+        // 创建 CPU Framebuffer
         framebuffer = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        framebuffer.filterMode = FilterMode.Point;
+        framebuffer.wrapMode = TextureWrapMode.Clamp;
+
         pixels = new Color32[width * height];
 
+        // 原始顶点：当前使用屏幕像素坐标
+        originalPoints = new Vector2[]
+        {
+            new Vector2(10f, 10f),
+            new Vector2(100f, 120f),
+            new Vector2(0f, 111f)
+        };
+
+        points = new Vector2[originalPoints.Length];
+
+        // RawImage 只需绑定一次纹理
+        output.texture = framebuffer;
+
+        RenderFrame();
+    }
+
+    private void Update()
+    {
+        // 帧率无关的角度累积
+        angleDegrees = Mathf.Repeat(angleDegrees + rotationSpeed * Time.deltaTime, 360f);
+
+        // 本实验的 framebuffer 尺寸在 Play 期间保持不变
+        if (width != framebuffer.width || height != framebuffer.height)
+        {
+            Debug.LogWarning("请退出 Play 模式后再修改 Framebuffer 尺寸", this);
+            enabled = false;
+            return;
+        }
+
+        RenderFrame();
+    }
+
+    private void RenderFrame()
+    {
+        // 清除上一帧颜色
         BgColored();
-        //SetPixel(30,30);
-        //BgColored2();
-        DrawTriangle(new Vector2(10, 10), new Vector2(100, 120), new Vector2(0, 111), new Color32(0, 0, 0, 255));
+
+        // 构建本帧完整变换矩阵
+        Matrix4x4 transform = BuildTransformMatrix();
+
+        // 每次都从原始顶点重新计算
+        for (int i = 0; i < originalPoints.Length; i++)
+        {
+            Vector3 source = new Vector3(originalPoints[i].x, originalPoints[i].y, 0f);
+            Vector3 result = transform.MultiplyPoint3x4(source);
+            points[i] = new Vector2(result.x, result.y);
+        }
+
+        DrawTriangle(points[0], points[1], points[2], new Color32(0, 0, 0, 255));
         ApplyBuffer();
     }
 
-    // Update is called once per frame
-    void Update()
+    private Matrix4x4 BuildTransformMatrix()
     {
-        
+        float rad = angleDegrees * Mathf.Deg2Rad;
+        float cos = Mathf.Cos(rad);
+        float sin = Mathf.Sin(rad);
+
+        // 旋转矩阵 R
+        Matrix4x4 rotation = Matrix4x4.identity;
+        rotation.m00 = cos;
+        rotation.m01 = -sin;
+        rotation.m10 = sin;
+        rotation.m11 = cos;
+
+        // 缩放矩阵 S
+        Matrix4x4 scaleMatrix = Matrix4x4.identity;
+        scaleMatrix.m00 = scale;
+        scaleMatrix.m11 = scale;
+
+        // 旋转和缩放的中心：Framebuffer 中心
+        Vector3 pivot = new Vector3(width * 0.5f, height * 0.5f, 0f);
+
+        Matrix4x4 toOrigin = Matrix4x4.Translate(-pivot);
+        Matrix4x4 fromOrigin = Matrix4x4.Translate(pivot);
+
+        // 从右向左执行：移到原点 → 缩放 → 旋转 → 移回
+        return fromOrigin * rotation * scaleMatrix * toOrigin;
     }
-    void BgColored2()
+
+    private void BgColored()
     {
+        Color32 red = new Color32(255, 0, 0, 255);
+        Color32 green = new Color32(0, 255, 0, 255);
+        Color32 blue = new Color32(0, 0, 255, 255);
+        Color32 yellow = new Color32(255, 255, 0, 255);
+
         for (int i = 0; i < pixels.Length; i++)
         {
-            pixels[i] = new Color32(255, 255, 0, 255); // 黄色
-        }
-    }
-    void BgColored()
-    {
-        for (int i = 0; i < pixels.Length; i++)
-        { 
             int x = i % width;
-            int y = i / height;
+            int y = i / width;
+
             if (x < width / 2 && y < height / 2)
-            {
-                pixels[i] = new Color32(255, 0, 0, 255); // 红色
-            }
+                pixels[i] = red;
             else if (x >= width / 2 && y < height / 2)
-            {
-                pixels[i] = new Color32(0, 255, 0, 255); // 绿色
-            }
+                pixels[i] = green;
             else if (x < width / 2 && y >= height / 2)
-            {
-                pixels[i] = new Color32(0, 0, 255, 255); // 蓝色
-            }
+                pixels[i] = blue;
             else
-            {
-                pixels[i] = new Color32(255, 255, 0, 255); // 黄色
-            }
+                pixels[i] = yellow;
         }
     }
 
-    void ApplyBuffer()
+    private void ApplyBuffer()
     {
         framebuffer.SetPixels32(pixels);
-        framebuffer.Apply();
-        output.texture = framebuffer;
+        framebuffer.Apply(false, false);
     }
 
-    void SetPixel(int x ,int y)
-    { 
-        if(x<0||x>=width||y<0||y>=height)
+    private void SetPixel(int x, int y)
+    {
+        if (x < 0 || x >= width || y < 0 || y >= height)
         {
             Debug.LogError("坐标超出范围");
             return;
         }
+
         int index = y * width + x;
-        pixels[index] = new Color32(0, 0, 0, 255); 
-    }
-
-    private void OnDestroy()
-    {
-        if (framebuffer != null)
-        {
-            Destroy(framebuffer);
-        }
-        framebuffer = null;
-        pixels = null;
-
+        pixels[index] = new Color32(0, 0, 0, 255);
     }
 
     private float Edge(Vector2 a, Vector2 b, Vector2 p)
@@ -137,4 +206,17 @@ public class SoftwareFramebufferDemo : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (output != null && output.texture == framebuffer)
+            output.texture = null;
+
+        if (framebuffer != null)
+            Destroy(framebuffer);
+
+        framebuffer = null;
+        pixels = null;
+        points = null;
+        originalPoints = null;
+    }
 }
