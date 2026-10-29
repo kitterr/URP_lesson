@@ -138,3 +138,10 @@
 - **完成记录门禁：** 已发送、已阅读、代码中存在功能均不等于通过。必须有用户实际操作/回答、教师验收和明确日志记录。部分子步骤通过只更新子步骤，不代表整个阶段通过。
 - **当前执行状态（2026-10-29）：** 用户说明今天没有空学习。MSR-01 当前阶段“现有代码整理与运行时 Texture2D 生命周期/OnDestroy 清理检查”仍未完成/未验收。下一次推送必须重复这一阶段并提醒进度已落后；不得进入三角形绘制。
 - 自动化任务与 GitHub 不会自动同步。只有工具写入成功后才能说已同步。
+
+
+## 10. MSR-01 生命周期检查进度（2026-10-29）
+
+- 用户实际运行反馈：移除 `SoftwareFramebufferDemo` 组件后，RawImage 的纹理引用成功清空，Console 没有任何异常。当前 `OnDestroy()` 子步骤已验收通过：先检查 `output != null && output.texture == framebuffer` 并解除 RawImage 引用，再 `Destroy(framebuffer)`，最后清空 `framebuffer` 和 `pixels`。详情见 [MSR_LOG_2026-10-27.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-10-27.md)。
+- 用户决定保留空的 `Update()` 作为未来测试入口。尊重此决定，不再要求删除；记录为有意保留，而不是未完成缺陷。
+- 当前阶段仍未整体通过。下一步检查初始化代码中运行时 `Texture2D` 的创建及 `output.texture` 赋值，确认创建—上传—显示—销毁生命周期闭合；只检查该子步骤，不进入三角形绘制。用户需要提供相关初始化代码后再进行代码级验收。
