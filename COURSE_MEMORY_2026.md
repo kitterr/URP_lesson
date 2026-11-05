@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-03；性质：课程记录与训练协议，不是程序源代码；当前进度：**D01 已验收通过；MSR-01 已整体验收通过；MSR-02/03 已取得自定义 View/Projection 与 FBX CPU 线框的运行/画面证据；2026-11-03 已完成 CPU 光栅化全流程原理通览，但概念验收尚未全部完成；完整 CPU Renderer 暂缓，后续优先转入 GPU 图形流水线、Shader/HLSL 与 URP。**
+> 维护日期：2026-11-05；性质：课程记录与训练协议，不是程序源代码；当前进度：**D01 已验收通过；MSR-01 已整体验收通过；MSR-02/03 已有自定义 View/Projection 与 FBX CPU 线框运行/画面证据；2026-11-05 完成 CPU 软渲染原理复习与概念问答验收，软渲染学习阶段暂时收尾；完整 CPU Renderer 的几何裁剪、填充、深度与纹理采样未实现，留作 TA 课程后的综合练习；下一阶段转入 GPU 图形流水线、Shader/HLSL 与 Unity 6 URP。**
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -198,3 +198,15 @@
 - **教学方式继续执行：** 先讲一个知识点的原理，再讲关键方法/算法/公式与必要 API；用户独立写代码，导师按问题逐段指导；用户实际运行后，再提供完整参考版本对照。纯原理知识点可用图示、现象解释和问答验收，不强制编写 CPU 版本。
 - **下次学习起点：** 先完成 CPU 光栅化原理的必要理解检查；随后衔接 GPU 图形流水线及 Vertex/Fragment Shader、HLSL，并映射到 Unity 6 URP。不要恢复“立即实现 Near Plane 裁剪代码”的旧安排。
 - 详细当日日志：[`MSR_LOG_2026-11-03.md`](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-11-03.md)。
+
+
+## 23. 2026-11-05 CPU 软渲染复习与阶段性收尾
+
+- 用户于 2026-11-05 完成 CPU Software Rasterizer 原理复习与问答验收，能够把 Mesh 顶点/索引、Object/World/View/Clip、投影与 W、Clip 裁剪、Perspective Divide、NDC→Pixel、Triangles→pixelVertices、DrawLine、CPU Framebuffer、Texture2D 上传与 RawImage 显示串成完整数据流。
+- **概念复习结论：通过。** 复习中再次明确：View Space 以 Camera 为参考；`triangles[]` 保存顶点索引；`pixelVertices[k]` 与原始顶点索引保持对应；三角形线框绘制 AB/BC/CA 三条边；Framebuffer 索引为 `y * width + x`；CPU `Color32[]` 经 `SetPixels32`、`Apply` 后由 RawImage 引用 Texture2D 显示。
+- 纠正并确认：Clip Space 必须先做几何裁剪再做透视除法；单个顶点在裁剪范围外不代表整个三角形不可见，需计算边与裁剪面的交点并重新三角化；`pixelVisibility[]` 只是顶点有效性标记，不能替代几何裁剪。
+- 透视投影和正交投影都经过齐次除法；本正交示例中 `w=1`，所以数值上 XYZ 不变，实际代码可在确定 W 恒等于 1 时省略除法，但概念流程仍是 Clip → NDC。
+- 本次是口头问答复习，没有新的代码提交、Unity 运行截图或性能测量；不新增实现验收证据。历史实践证据继续有效：自定义 View Matrix 的 9656 顶点对照误差 `MaxError=7.139194E-05`，以及 FBX CPU 线框已有画面截图。
+- **软渲染阶段状态：暂时收尾/暂停，不等于完整 CPU Renderer 完成。** 真正的三角形裁剪、填充光栅化、Depth Buffer、透视正确插值与纹理采样仍未实现/运行验收；保留为 TA 课程结束后的综合练习，不再作为当前主线前置门槛。
+- **下一次课程：** 开始新的 GPU 渲染主线，学习 GPU 图形流水线、Vertex/Fragment Shader、ShaderLab/HLSL，并映射到 Unity 6 URP。具体课程编号按实际排课推进，不把今天的复习强行计入 Dxx。
+- 详细当日日志：[MSR_LOG_2026-11-05.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-11-05.md)。
