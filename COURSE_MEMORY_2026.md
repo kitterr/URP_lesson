@@ -210,3 +210,14 @@
 - **软渲染阶段状态：暂时收尾/暂停，不等于完整 CPU Renderer 完成。** 真正的三角形裁剪、填充光栅化、Depth Buffer、透视正确插值与纹理采样仍未实现/运行验收；保留为 TA 课程结束后的综合练习，不再作为当前主线前置门槛。
 - **下一次课程：** 开始新的 GPU 渲染主线，学习 GPU 图形流水线、Vertex/Fragment Shader、ShaderLab/HLSL，并映射到 Unity 6 URP。具体课程编号按实际排课推进，不把今天的复习强行计入 Dxx。
 - 详细当日日志：[MSR_LOG_2026-11-05.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/MSR_LOG_2026-11-05.md)。
+
+
+## 24. 2026-11-08：GPU Shader/深度学习进度（最新）
+
+- **当前主线：GPU-03 Early-Z、Overdraw、Reversed-Z 和 URP Depth Prepass/Depth Priming。** 原理已讲解，性能实验尚未完成；下次从区分 Depth Prepass、Depth Priming 和 GPU Early-Z 开始，不重复已验收内容。
+- **CPU 软渲染学习阶段已暂时收尾**，不再作为 GPU/URP 主线的前置门槛；仍不等于完整 CPU Software Renderer 综合实现验收通过。Clip Space 单平面交点公式和 lerp 用户早已掌握，且应用于 Houdini 简易 Boolean，标记通过，不重复考。
+- **GPU-01 概念通过**：CPU/GPU Draw Call 与 Vertex Shader 分工、Attributes 顶点通道语义、Houdini string 不能直接作为 GPU 顶点输入（需 ID/数值通道映射）、UV4↔TEXCOORD3、Varyings/插值/Fragment Shader。**有截图的实测**：URP UV 可视化渐变成功，Fragment Shader 中 UV×2 饱和结果成功；Houdini/Unity 细分 Plane 上 Vertex/Fragment 两种 sin 方案已实践。未独立实测 UV 反转、低细分 Quad 的非线性差异，不擅自标记。
+- **GPU-02 ZTest/ZWrite/Draw Order 实践通过**：用户通过 Frame Debugger 确认红色先绘制、蓝色后绘制。A 正常深度红挡蓝；B 蓝色 ZTest Always 后画盖红；C 红色 ZWrite Off 后蓝色正常深度仍盖红。旧版 C“红色遮挡”反馈已被用户最终修正，不作为待排查项。
+- **GPU-03 理论讲解中/待实测**：了解 Early-Z 是 GPU 可能提前拒绝被遮挡片元的优化、Overdraw 是重复覆盖/处理现象；理解 Reversed-Z 近=1、远=0 的数值方向及 Unity 跨平台 ZTest 逻辑处理；区分 URP 的 Depth Priming 与硬件 Early-Z。尚无五层 Quad Overdraw 截图、GPU 时间测量或 RenderDoc 证据，不能标记完成。
+- **教学改进**：选择题默认不选中任何答案；优先学员独立编写、截图反馈并验收，课程按阶段推进；不要重发完整参考实现取代学员实践。
+- 详细日志：[GPU_LOG_2026-11-08.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/GPU_LOG_2026-11-08.md)。
