@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-05；性质：课程记录与训练协议，不是程序源代码；当前进度：**D01 已验收通过；MSR-01 已整体验收通过；MSR-02/03 已有自定义 View/Projection 与 FBX CPU 线框运行/画面证据；2026-11-05 完成 CPU 软渲染原理复习与概念问答验收，软渲染学习阶段暂时收尾；完整 CPU Renderer 的几何裁剪、填充、深度与纹理采样未实现，留作 TA 课程后的综合练习；下一阶段转入 GPU 图形流水线、Shader/HLSL 与 Unity 6 URP。**
+> 维护日期：2026-11-10；性质：课程记录与训练协议，不是程序源代码；当前进度：**D01 已验收通过；MSR-01 已整体验收通过，CPU 软渲染学习阶段暂时收尾；GPU-01 主要数据流与 UV 实验已完成；GPU-02 ZTest/ZWrite 实践验收通过；GPU-03 Depth Prepass / Depth Priming Disabled-Auto 对照通过，Early-Z / Overdraw 理论已讲完，合成性能测试由用户主动延后至真实项目场景；第三轮综合测验 5/8 为诊断成绩，包含未教学知识，不作为正式成绩；下一阶段 GPU-04 ShaderLab 与 HLSL 架构。**
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -221,3 +221,15 @@
 - **GPU-03 理论讲解中/待实测**：了解 Early-Z 是 GPU 可能提前拒绝被遮挡片元的优化、Overdraw 是重复覆盖/处理现象；理解 Reversed-Z 近=1、远=0 的数值方向及 Unity 跨平台 ZTest 逻辑处理；区分 URP 的 Depth Priming 与硬件 Early-Z。尚无五层 Quad Overdraw 截图、GPU 时间测量或 RenderDoc 证据，不能标记完成。
 - **教学改进**：选择题默认不选中任何答案；优先学员独立编写、截图反馈并验收，课程按阶段推进；不要重发完整参考实现取代学员实践。
 - 详细日志：[GPU_LOG_2026-11-08.md](https://github.com/kitterr/URP_lesson/blob/study/urp-ta-course-memory-2026/GPU_LOG_2026-11-08.md)。
+
+
+## 25. 2026-11-10 当前进度、教学约定与知识台账（最新）
+
+- **GPU-03 已结课（理论）：** Early-Z、Overdraw、Depth Prepass、Depth Priming、Reversed-Z 的关系已系统讲解。
+- **Depth Prepass / Depth Priming 实践：** Forward+ + Depth Texture Mode Force Prepass 下，Depth Priming Disabled 时仍观察到 Draw Depth Only / DepthPrepass；切换 Auto 后预通道仍存在、Opaque 正常。Frame Debugger 对照显示 Disabled 的 ZTest 为 LessEqual、Auto 为 Equal。ZWrite 未完成独立核验。
+- **Overdraw / Early-Z 性能实验：** 用户主动跳过合成 Quad 性能测试，留待真实项目场景出现时结合具体问题学习工具；不作为课程门槛。
+- **第三轮 GPU-01～03 诊断测验：** 5/8。多题涉及未系统教学的 Instancing Buffer、noperspective、透明 ZWrite On、Alpha Clipping 跨 Pass 一致性、SV_Depth、clip/discard、VSync 等，因此不作为正式课程成绩。逐题状态见 [GPU_LOG_2026-11-10.md](GPU_LOG_2026-11-10.md)。
+- **教学方式更新：** 用户时间有限，优先高信息密度。每个完整主题先给知识地图并系统讲解，再安排有明确价值的集中实践；避免碎片化微实验、临时追加测试、重复内容和无必要测验。完整规则见 [TA_TEACHING_RULES.md](TA_TEACHING_RULES.md)。
+- **知识掌握状态：** 已按“未引入 / 已提及 / 已系统教学 / 理解已确认 / 实践已验收 / 主动跳过或延后”分层维护，见 [TA_KNOWLEDGE_LEDGER.md](TA_KNOWLEDGE_LEDGER.md)。
+- **下一步：** GPU-04 ShaderLab 与 HLSL 架构。跨对话恢复说明见 [TA_HANDOFF_2026-11-10.md](TA_HANDOFF_2026-11-10.md)。
+- 本节覆盖 2026-11-08 的旧“下一步继续 GPU-03 Overdraw 实测”安排；旧日志作为历史记录保留，不再作为当前执行指令。
