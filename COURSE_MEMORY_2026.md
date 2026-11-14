@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-10；性质：课程记录与训练协议，不是程序源代码；当前进度：**D01 已验收通过；MSR-01 已整体验收通过，CPU 软渲染学习阶段暂时收尾；GPU-01 主要数据流与 UV 实验已完成；GPU-02 ZTest/ZWrite 实践验收通过；GPU-03 Depth Prepass / Depth Priming Disabled-Auto 对照通过，Early-Z / Overdraw 理论已讲完，合成性能测试由用户主动延后至真实项目场景；第三轮综合测验 5/8 为诊断成绩，包含未教学知识，不作为正式成绩；下一阶段 GPU-04 ShaderLab 与 HLSL 架构。**
+> 维护日期：2026-11-15；性质：课程记录与训练协议，不是程序源代码；**最新进度 GPU-04-D7 Shader Variant + Frame Debugger 已正式验收通过；下一节 GPU-04-D8 GPU Profiling。** 历史 GPU-01～03、MSR 记录保留；最近分项状态见第 26 节和 GPU_LOG_2026-11-15.md。
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -81,7 +81,7 @@
 ## 5. 能力验收：课程内部 L8
 毕业项目计 100 分：架构和时序 20、Render Graph 依赖与生命周期 25、Shader/视觉正确性 15、Camera/对象筛选与集成 10、调试和性能对照 15、代码/文档/工程权衡 15。目标 >=80，且不允许有严重的资源/时序错误。此分数只证明这套课程定义的独立实战能力，**不等价于业界 8 年经验或可以重写完整 SRP**。
 
-## 6. 历史状态快照（截至 2026-10-27；最新状态见第 22 节）
+## 6. 历史状态快照（截至 2026-10-27；最新状态见第 26 节）
 - 用户将 2026-10-26 重新定义为 Day 1 / D01；D01 四个阶段已通过验收。
 - D01 环境：Unity Editor 6000.6.7f1；URP Package 17.6.0；Windows；Auto Graphics API 已勾选；Graphics API 列表由用户记为“D12”，具体全称未进一步确认。
 - D01 阶段二：Graphics 默认管线与 Quality/PC 管线资源均为 PC_RPAsset；Windows 默认质量等级和 Editor 当前质量等级均为 PC。
@@ -233,3 +233,15 @@
 - **知识掌握状态：** 已按“未引入 / 已提及 / 已系统教学 / 理解已确认 / 实践已验收 / 主动跳过或延后”分层维护，见 [TA_KNOWLEDGE_LEDGER.md](TA_KNOWLEDGE_LEDGER.md)。
 - **下一步：** GPU-04 ShaderLab 与 HLSL 架构。跨对话恢复说明见 [TA_HANDOFF_2026-11-10.md](TA_HANDOFF_2026-11-10.md)。
 - 本节覆盖 2026-11-08 的旧“下一步继续 GPU-03 Overdraw 实测”安排；旧日志作为历史记录保留，不再作为当前执行指令。
+
+
+## 26. 2026-11-15 最新课程进度：GPU-04-D7 通过，下一节 GPU-04-D8（当前有效）
+
+- **正式已通过：** GPU-04-A ShaderLab/HLSL Unlit；GPU-04-B _BaseColor / UnityPerMaterial / SRP Batcher 实测 Compatible↔Not Compatible；GPU-04-D2 法线逆转置；GPU-04-D3 Lambert（saturate）；GPU-04-D7 Shader Variant/Frame Debugger。GPU-04-D4 固定环境光与直接光的主要公式和视觉表现已通过，SRP Batcher 本节未单独确认。GPU-04-C4 各向异性过滤的 Aniso 1x/16x 倾斜纹理对照通过。
+- **D5 球谐：** `SampleSH(normalWS)` 在 Unity 中正常运行；已理解 9 个球谐基函数、RGB 系数、L0/L1/L2 的方向变化，已经讲解 Unity 的 `unity_SHAr/Ag/Ab`、`unity_SHBr/Bg/Bb`、`unity_SHC`、`SHEvalLinearL0L1`、`SHEvalLinearL2` 实现思路。**Gradient 天蓝地橙实际方向对照、源码拆解独立实验尚未正式验收；D5 不标整节全部通过。**
+- **D6 Vertex/Pixel SH：** 用户通过 `[Toggle(TA_SH_VERTEX)]` 与 `#pragma shader_feature_local _ TA_SH_VERTEX` 在 Material Inspector 成功切换；低/高面数 Sphere 画质对照、真实 GPU 耗时尚未确认。
+- **D7 实际验收证据：** Frame Debugger 的 Vertex SH Draw Call 显示 Local `TA_SH_VERTEX`（Stage vs/fs、Dynamic No）；Pixel SH 事件展开 Keywords 后用户确认**没有 `TA_SH_VERTEX`**。绘制显示 `SRP Batch`，但这不能证明哪种方案更快。**D7 通过。**
+- **其他待确认：** C1 Texture/Sampler/UV 单独运行/Batch；C2 Clamp/Batch；C3 Filter/Mipmap 详细对照；D1 世界法线修正后的旋转运行验证。已通过的分项不重复教学，待确认不自动记为完成。
+- **唯一下一节：GPU-04-D8 GPU Profiling。** 讲 CPU/GPU Time、FPS/VSync、Profiler vs Frame Debugger、Vertex SH 与 Pixel SH 的可复现 A/B 测量和瓶颈归因；在真实性能数据出现前不下结论，低价值合成性能测试不必强制实施。
+- **最新教学约定：** 用户单独输入 `1` 代表“继续”；不重复出 `xy`、平方、乘法、简单数值代入等已掌握的计算题。重点检查渲染原理、Shader 实现、截图/调试证据、GPU Profile 与问题排查。新数学符号仍需解释，教程先给整体知识地图再做有价值的集中实践。
+- **详情：** [GPU_LOG_2026-11-15.md](GPU_LOG_2026-11-15.md)；**恢复课程请优先阅读** [TA_HANDOFF_2026-11-15.md](TA_HANDOFF_2026-11-15.md) 及 [TA_TEACHING_RULES.md](TA_TEACHING_RULES.md)、[TA_KNOWLEDGE_LEDGER.md](TA_KNOWLEDGE_LEDGER.md)。此前第 25 节关于“下一步进入 GPU-04 架构”的指示已被本节覆盖，保留为历史快照。
