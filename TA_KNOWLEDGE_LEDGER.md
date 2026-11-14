@@ -1,6 +1,6 @@
 # TA 知识掌握台账 — Unity 6 URP Rendering TA
 
-> 更新日期：2026-11-10。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
+> 更新日期：2026-11-15。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
 
 ## 1. 状态定义
 
@@ -28,7 +28,7 @@
 | 透视正确插值的基础直觉 | 已系统教学（基础层） | CPU 光栅化原理课程已覆盖；GPU HLSL 插值修饰符与具体 Semantic 细节仍需补充 |
 | noperspective / centroid / sample 等 HLSL 插值修饰符 | 未系统教学 | 第三轮 Q2 属于超出教学范围的诊断题；用户选 centroid，正确概念为 noperspective 对应非透视校正屏幕线性插值 |
 | GPU Instancing 基础与 Instancing Buffer / 每实例属性 | 未系统教学 | 第三轮 Q1 用户正确选择 Instancing Buffer，属于推理正确，不等于已经教学或实践 |
-| UnityPerMaterial / CBUFFER 布局与 SRP Batcher 关系 | 未确认系统教学 | 不得默认用户已掌握；在 GPU-04/HLSL 与 SRP Batcher 相关模块核实并补讲 |
+| UnityPerMaterial / CBUFFER 布局与 SRP Batcher 关系 | **实践已验收（GPU-04-B）** | 已独立实现材质属性，故意移动到 CBUFFER 外验证 Inspector 的 Not Compatible，恢复 Compatible；详见 GPU_LOG_2026-11-15.md |
 
 ## 3. GPU-02：Depth Test、ZWrite 与绘制顺序
 
@@ -85,3 +85,29 @@
 - 测验题如超出教学范围，标记为诊断题并从正式成绩中剔除。
 - 用户主动跳过的实验记为主动跳过/延后，不反复要求补做。
 - 新对话优先读取本台账与最新学习日志；不得仅凭模型记忆推断用户掌握程度。
+
+
+## 8. GPU-04：ShaderLab/HLSL、光照、SH 与 Shader Variant（2026-11-15 新增）
+
+| 知识点 | 当前状态 | 记录与边界 |
+|---|---|---|
+| Unlit Shader、Attributes/Varyings、TransformObjectToHClip、Frame Debugger 找到 Draw Call | **实践已验收** | GPU-04-A，用户编译并让 Cube 显示红色 |
+| _BaseColor / UnityPerMaterial / SRP Batcher | **实践已验收** | GPU-04-B，Material Compatible↔Not Compatible 实验 |
+| Texture2D / SamplerState / UV | 代码审查通过；部分运行待确认 | GPU-04-C1 单独运行/Batch 未全部确认 |
+| Tiling / Offset | 概念与视觉实验通过；部分待确认 | GPU-04-C2 Clamp/Batch 未独立确认 |
+| Bilinear / Trilinear / Mipmap | 已系统教学，概念理解确认 | GPU-04-C3 精细视觉对照未全部确认 |
+| Anisotropic Filtering | **实践已验收** | GPU-04-C4 倾斜地面 Aniso 1x/16x 对照 |
+| 世界空间法线可视化 | 有运行验证，最终细节待确认 | GPU-04-D1 Sphere/Cube 可见；TEXCOORD 和 frag normalize 修正后旋转运行未全部单独验收 |
+| 非均匀缩放与逆转置法线矩阵 | **理解与实践已验收** | GPU-04-D2 Unity 对照 WorldDir vs WorldNormal |
+| Lambert 漫反射、dot/saturate | **实践已验收** | GPU-04-D3 用户编写 Shader，反馈实际运行符合预期 |
+| 直接光 + 固定 Ambient 光 | 主要公式、视觉已验收；细节待确认 | GPU-04-D4 修正 `baseColor * (directLight + ambientLight)`；该节 SRP Batcher 未独立核查 |
+| SampleSH 基础调用 | **运行已确认** | GPU-04-D5 替换手写环境光后正常显示 |
+| SH 基函数/系数/L0-L1-L2 | **基础理解已确认** | 用户掌握基函数变化与系数 RGB 作用，不再重复简单计算测验 |
+| Unity SH 数据变量、SHEvalLinearL0L1 / SHEvalLinearL2 | 已系统教学，源码实验未验收 | GPU-04-D5 Gradient 方向验证和源码拆分独立实验亦未验收，不把全节标为通过 |
+| Vertex SH、Pixel SH、Mixed 机制 | 已系统教学 | GPU-04-D6 Inspector 模式切换成功；画质/性能实测待确认 |
+| Toggle + shader_feature_local Shader Keyword | **实践已验收** | Inspector 成功在两模式之间切换 |
+| Local Keyword + Variant 在 Frame Debugger 中检查 | **实践已验收** | GPU-04-D7 Vertex Draw Call 有 TA_SH_VERTEX；Pixel Draw Call 展开 Keywords 无该项 |
+| SRP Batch 可见 | 绘制状态已观察 | 不能推出真实 GPU 性能收益 |
+| CPU/GPU Frame Time、Profiler、Vertex vs Pixel SH A/B 性能 | **GPU-04-D8 下一节，尚未实测** | 后续按实际 GPU 数据作判断；不要求无意义的合成基准测试 |
+
+当前恢复指针：`GPU_LOG_2026-11-15.md`、`TA_HANDOFF_2026-11-15.md`。单独输入 `1` 表示继续；跳过已理解的简单算术反复验收。
