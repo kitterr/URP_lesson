@@ -1,6 +1,6 @@
 # TA 教学与进度管理约定
 
-> 最后更新：2026-11-15。适用于 Unity 6 + URP Rendering TA 主线、Shader/HLSL、URP/Render Graph、工具与性能分析课程。本文是当前生效规则；与早期日志中冲突的教学安排，以本文为准，历史记录保留为当时状态。
+> 最后更新：2026-11-16。适用于 Unity 6 + URP Rendering TA 主线、Shader/HLSL、URP/Render Graph、工具与性能分析课程。本文是当前生效规则；与早期日志中冲突的教学安排，以本文为准，历史记录保留为当时状态。
 
 ## 1. 核心原则：高效、完整、以能力为目标
 
@@ -82,13 +82,13 @@
 - 当前主线：GPU 图形流水线 → ShaderLab/HLSL → Unity 6 URP 架构 → Render Graph → 自定义渲染功能/工具 → 真实项目调试与性能分析。
 - CPU Mini Software Renderer 原理学习已暂时收尾，不再作为 GPU/URP 主线的前置门槛；完整 CPU Renderer 仍可作为未来综合练习。
 - GPU-03 理论部分已结束；Depth Prepass/Depth Priming 对照有实际验证；Overdraw/Early-Z 性能测试主动延后，等待真实项目场景。
-- **截至 2026-11-15 的最新位置：GPU-04-D7 Shader Variant/Frame Debugger 实践已验收；下一模块 GPU-04-D8 GPU Profiling。** GPU-04-A/B/D2/D3 通过，D4 主要公式及视觉通过，D5/D6 部分实验待验收，具体见最新 GPU 日志。
+- **截至 2026-11-16 的最新位置：GPU-04-F3 Scene Depth 交界发光，原理已理解、Unity 运行待验收。** F2 半透明 Fresnel 护盾概念与 Unity 实际运行通过；F1 Fresnel 概念通过，独立运行未确认；E1～E7 核心概念通过，逐项运行未确认。D8 GPU 性能实测由用户主动延后，不作为当前门槛。历史 D/C 细分状态保持，以最新 GPU 日志及知识台账为准。
 - 教学主环境为 Unity 6 + URP。当前具体 Editor/URP Package 小版本未在 2026-11-10 重新核实；涉及版本差异的 API/源码教学前应核对。公司 Unity 2022.3.62f1 项目不能默认直接套用 Unity 6 代码。
 - 既定时间预算：工作日每天约 3 小时，周末两天合计约 5 小时。该预算是可用上限/计划，不是必须占满的时长；内容完成即可结束。
 
 ## 8. 新对话恢复流程
 
-1. 读取本文件、COURSE_MEMORY_2026.md、最新 GPU 学习日志（当前 GPU_LOG_2026-11-15.md）、TA_KNOWLEDGE_LEDGER.md 和最新 TA_HANDOFF 文件（当前 TA_HANDOFF_2026-11-15.md）。
+1. 读取本文件、COURSE_MEMORY_2026.md、最新 GPU 学习日志（当前 GPU_LOG_2026-11-16.md）、TA_KNOWLEDGE_LEDGER.md 和最新 TA_HANDOFF 文件（当前 TA_HANDOFF_2026-11-16.md）。
 2. 以最新日志为准，忽略已经被后续记录覆盖的旧“下一步”指令。
 3. 开始时用简短回顾说明当前阶段、已通过内容、未教学缺口和唯一下一步。
 4. 按“课程导航 → 系统讲解 → 有必要时集中实践 → 验收与记录”执行。
@@ -108,3 +108,12 @@
 - **抽象公式仍要解释：** 对新出现的 `Σ`、下标、系数、基函数、空间/坐标等先解释其物理含义与所解决的问题，使用与公式一致的图示；避免一次性抛出大量三维角度、球谐函数和不相关术语。
 - **课程先讲完整结构：** 先给知识地图和执行流程，再说明数据流、实际源码/API、性能取舍；只安排一组能回答真实工程问题的实验，避免低价值微实验和形式化验收。
 - **证据边界：** D7 的 Shader Keyword/变体已从 Frame Debugger 证明；`SRP Batch` 不等于 GPU 加速证据，D8 必须使用合适的性能工具，或诚实记录尚无可靠测量。
+
+
+## 11. 2026-11-16 Scene Depth 教学反馈：原理和数据流优先于 API（最新补充）
+
+- 面对未教学过的 `_CameraDepthTexture`、`GetNormalizedScreenSpaceUV`、`SampleSceneDepth`、`LinearEyeDepth` 等 API，**严禁先抛完整 Shader 和调用链再讲原理**。必须先交代真实渲染问题、Depth Buffer/Camera Depth Texture 数据来源、屏幕位置对应关系、Raw Depth 与 Eye Depth 的空间区别，以及每个输出如何交给下一步。
+- 用学员已知的空间变换、ZTest/Depth Buffer 建立直觉，再分层解释公式、参数与可观察结果；讲 API 时具体写清用途、输入/返回值与类型、何时调用、相关文件、平台或透明渲染限制，然后统一给完整代码。
+- **数学或 Shader 视觉知识要真正显示图**：交互曲线、几何示意、能跟随 `_IntersectionWidth` 等参数变化的可视化优先；只提供 Python 绘图源代码而无真实图像，不能视为完成了可视化教学。
+- F3 中深度差是同一个屏幕像素对应视线上的 Eye Depth 差，不能称作两个 Mesh 的三维最近距离；发光是后续利用权重主动加颜色，不是深度差天然产生发光。应明确说明屏幕空间方法的假阳性、遮挡、透明排序等边界。
+- 在一个连续模块内，不必每教一个函数都出题；理论重点理解后直接进行能检验数据流的 Unity Debug 实验。分离“概念理解通过”与“Unity 运行通过”。
