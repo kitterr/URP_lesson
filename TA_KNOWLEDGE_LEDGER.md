@@ -65,10 +65,10 @@
 
 1. **GPU Instancing**：实例化绘制机制、实例 ID、Instancing Buffer、每实例属性、与 SRP Batcher 的区别和适用条件。
 2. **HLSL 插值控制**：linear/perspective-correct、noperspective、nointerpolation、centroid、sample；何时使用及平台限制。
-3. **透明渲染**：Alpha Blend、ZTest、ZWrite、排序、深度写入造成的透明层消失问题。
+3. **透明渲染**：2026-11-16 已在 GPU-04-E 系统讲解并确认核心概念；部分独立实测、复杂几何与平台约束仍待实践，详见第 9 节。
 4. **DepthOnly / Forward 一致性**：Alpha Clipping、顶点动画、位移、双面/剔除等如何确保预通道与颜色 Pass 的几何和裁剪行为一致。
 5. **SV_Depth**：输出机制、与深度测试的关系、为什么可能限制传统 Early-Z、与 Depth Priming Equal 的冲突风险。
-6. **clip/discard**：动态丢弃对 Early-Z、深度更新和不同 GPU 路径的影响；避免绝对化结论。
+6. **clip/discard**：2026-11-16 已确认 Alpha=0 与 clip 丢弃的核心区别；Early-Z 和 GPU 平台细节仍待深入，避免绝对化结论。
 7. **性能测量**：GPU Frame Time、CPU/GPU bound、VSync、分辨率缩放、采样波动、GPU Profiler/RenderDoc 的证据边界。
 
 ## 6. 最新诊断测验快照（2026-11-10）
@@ -108,6 +108,28 @@
 | Toggle + shader_feature_local Shader Keyword | **实践已验收** | Inspector 成功在两模式之间切换 |
 | Local Keyword + Variant 在 Frame Debugger 中检查 | **实践已验收** | GPU-04-D7 Vertex Draw Call 有 TA_SH_VERTEX；Pixel Draw Call 展开 Keywords 无该项 |
 | SRP Batch 可见 | 绘制状态已观察 | 不能推出真实 GPU 性能收益 |
-| CPU/GPU Frame Time、Profiler、Vertex vs Pixel SH A/B 性能 | **GPU-04-D8 下一节，尚未实测** | 后续按实际 GPU 数据作判断；不要求无意义的合成基准测试 |
+| CPU/GPU Frame Time、Profiler、Vertex vs Pixel SH A/B 性能 | **GPU-04-D8 主动跳过/延后** | 用户决定后续结合真实复杂 URP 项目的实际性能瓶颈学习；目前无可靠 GPU 耗时测量 |
 
-当前恢复指针：`GPU_LOG_2026-11-15.md`、`TA_HANDOFF_2026-11-15.md`。单独输入 `1` 表示继续；跳过已理解的简单算术反复验收。
+2026-11-15 时点的恢复指针是 `GPU_LOG_2026-11-15.md`、`TA_HANDOFF_2026-11-15.md`；已被第 9 节的 2026-11-16 最新指针覆盖。单独输入 `1` 表示继续；跳过已理解的简单算术反复验收。
+
+
+## 9. GPU-04-E / F：渲染状态、Fresnel、Scene Depth（2026-11-16 最新）
+
+| 知识点 | 当前状态 | 记录与边界 |
+|---|---|---|
+| GPU-04-E1 Cull 与 ZTest | **概念理解已确认** | 屏幕空间三角形绕序 vs 法线、Always 与绘制顺序；Unity 独立运行未验收 |
+| GPU-04-E2 ZWrite/Depth | **概念理解已确认** | 普通透明通常 LEqual + ZWrite Off，Always 非默认方案；实验未确认 |
+| GPU-04-E3 透明排序 | **概念理解已确认** | Renderer 级远近排序和相交面局部排序错误；未逐项运行验收 |
+| GPU-04-E4 Alpha/Additive/Premultiply Blend | **概念理解已确认** | Fragment 内 RGB*Alpha 与加法混合；实验未确认 |
+| GPU-04-E5 clip/Alpha Test | **概念理解已确认** | 片元丢弃与深度更新；实验未确认 |
+| GPU-04-E6 Stencil Ref/Comp/Pass/Fail/ZFail | **概念理解已确认** | Equal/NotEqual 排除区域；实验未确认 |
+| GPU-04-E7 Stencil+Depth X-Ray | **概念理解已确认** | Greater 深度判断配合模板过滤；平台 Reversed-Z 实际状态及复杂 Mesh 仍需验证 |
+| GPU-04-F1 Fresnel dot(N,V)、反转与 pow | **概念通过** | 用户正确描述中心/边缘亮度反转；自写 Shader 的法线输入错误已指导修复，F1 独立 Unity 运行未确认 |
+| GPU-04-F2 Fresnel + Alpha Blend 护盾 | **实践已验收** | 用户回答 Alpha=0 与 clip 区别，明确确认 Unity 实际运行效果符合预期 |
+| GPU-04-F3 Depth Buffer vs _CameraDepthTexture | **原理理解已确认** | 可采样场景深度不一定与当前写入的 Depth Buffer 是同一个资源 |
+| GPU-04-F3 屏幕 UV、RawDepth、LinearEyeDepth 与 View 深度 | **已系统教学，整体数据流理解已确认** | GetNormalizedScreenSpaceUV、SampleSceneDepth、_ZBufferParams、-positionVS.z；尚未独立 Unity Debug 验证 |
+| GPU-04-F3 depthDiff / intersection 权重 | **理解已确认** | 用户自行复述：设定 Width 范围，眼空间深度差越小，权重越大；屏幕空间近似而非三维 Mesh 相交检测 |
+| GPU-04-F3 TA_FresnelDepth Shader/四个 Debug 模式 | **参考代码已提供，Unity 编译/运行待验收** | Final/RawDepth/EyeDepth/Intersection；未取得用户运行结果 |
+| GPU-04-D8 GPU 性能分析 | **主动跳过/延后** | 留到真实项目，无性能结论 |
+
+**最新恢复指针**：`GPU_LOG_2026-11-16.md`、`TA_HANDOFF_2026-11-16.md`、`COURSE_MEMORY_2026.md`、`TA_TEACHING_RULES.md`。**唯一下一步：GPU-04-F3 Unity Raw/Eye/Intersection Debug 实践**。旧版 11-15 的 D8“下一节”已过期。
