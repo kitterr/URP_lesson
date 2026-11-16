@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-15；性质：课程记录与训练协议，不是程序源代码；**最新进度 GPU-04-D7 Shader Variant + Frame Debugger 已正式验收通过；下一节 GPU-04-D8 GPU Profiling。** 历史 GPU-01～03、MSR 记录保留；最近分项状态见第 26 节和 GPU_LOG_2026-11-15.md。
+> 维护日期：2026-11-16；性质：课程记录与训练协议，不是程序源代码；**当前主线 GPU-04-F3 Scene Depth 交界发光：原理理解已确认，Unity 运行/Debug 待验收；F2 Fresnel+Alpha Blend 已在 Unity 运行通过；D8 性能实测已主动延后。** 历史 GPU-01～03、MSR 与 GPU-04-D 记录保留；最新分项状态见第 27 节及 GPU_LOG_2026-11-16.md。
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -235,7 +235,7 @@
 - 本节覆盖 2026-11-08 的旧“下一步继续 GPU-03 Overdraw 实测”安排；旧日志作为历史记录保留，不再作为当前执行指令。
 
 
-## 26. 2026-11-15 最新课程进度：GPU-04-D7 通过，下一节 GPU-04-D8（当前有效）
+## 26. 2026-11-15 课程进度历史快照：D7 通过、当时计划 D8（已被第 27 节覆盖）
 
 - **正式已通过：** GPU-04-A ShaderLab/HLSL Unlit；GPU-04-B _BaseColor / UnityPerMaterial / SRP Batcher 实测 Compatible↔Not Compatible；GPU-04-D2 法线逆转置；GPU-04-D3 Lambert（saturate）；GPU-04-D7 Shader Variant/Frame Debugger。GPU-04-D4 固定环境光与直接光的主要公式和视觉表现已通过，SRP Batcher 本节未单独确认。GPU-04-C4 各向异性过滤的 Aniso 1x/16x 倾斜纹理对照通过。
 - **D5 球谐：** `SampleSH(normalWS)` 在 Unity 中正常运行；已理解 9 个球谐基函数、RGB 系数、L0/L1/L2 的方向变化，已经讲解 Unity 的 `unity_SHAr/Ag/Ab`、`unity_SHBr/Bg/Bb`、`unity_SHC`、`SHEvalLinearL0L1`、`SHEvalLinearL2` 实现思路。**Gradient 天蓝地橙实际方向对照、源码拆解独立实验尚未正式验收；D5 不标整节全部通过。**
@@ -245,3 +245,16 @@
 - **唯一下一节：GPU-04-D8 GPU Profiling。** 讲 CPU/GPU Time、FPS/VSync、Profiler vs Frame Debugger、Vertex SH 与 Pixel SH 的可复现 A/B 测量和瓶颈归因；在真实性能数据出现前不下结论，低价值合成性能测试不必强制实施。
 - **最新教学约定：** 用户单独输入 `1` 代表“继续”；不重复出 `xy`、平方、乘法、简单数值代入等已掌握的计算题。重点检查渲染原理、Shader 实现、截图/调试证据、GPU Profile 与问题排查。新数学符号仍需解释，教程先给整体知识地图再做有价值的集中实践。
 - **详情：** [GPU_LOG_2026-11-15.md](GPU_LOG_2026-11-15.md)；**恢复课程请优先阅读** [TA_HANDOFF_2026-11-15.md](TA_HANDOFF_2026-11-15.md) 及 [TA_TEACHING_RULES.md](TA_TEACHING_RULES.md)、[TA_KNOWLEDGE_LEDGER.md](TA_KNOWLEDGE_LEDGER.md)。此前第 25 节关于“下一步进入 GPU-04 架构”的指示已被本节覆盖，保留为历史快照。
+
+
+## 27. 2026-11-16 最新进度：GPU-04-F2 实践通过，F3 理解已确认、待运行（当前有效）
+
+- **GPU-04-D8 Profiler / 性能测试：主动延后**。用户决定不为单纯对比 Vertex SH 与 Pixel SH 做低价值合成性能测量；未来结合真实复杂 URP 项目实际瓶颈再学习 Profiler、Frame Debugger、RenderDoc。没有任何本节 GPU 耗时实测证据。
+- **GPU-04-E1～E7 渲染状态：核心概念通过，逐项 Unity 运行未确认。** 包括 Cull（由屏幕三角形绕序决定而非顶点法线）、ZTest/ZWrite、透明对象排序与混合、普通 Alpha/加法/预乘 Blend、clip、Stencil、Stencil+Depth X-Ray。不能把概念理解当作每节的实现验收；涉及 Reversed-Z 的 ZTest/GPU 比较行为，应按平台/官方源码实际校验。
+- **GPU-04-F1 Fresnel：概念通过，独立 Unity 实验未单独确认。** 已理解 `dot(N,V)` 与 `1-NdotV` 可使中心/边缘亮度反向，`pow` 调节区域；用户自写的 `TA_Fresnel` Shader 曾将 positionOS 误当法线输入，已纠正为 `normalOS:NORMAL`。
+- **GPU-04-F2 Fresnel + Alpha Blend：概念与 Unity 实际运行正式通过。** 用户解释 Alpha=0 与 clip 丢弃的区别，并明确反馈护盾的运行结果符合预期。
+- **GPU-04-F3 Scene Depth 交界发光：原理已理解，Unity 编译/运行/Debug 尚未验收。** 已理解 Depth Buffer 与 _CameraDepthTexture、Fragment 屏幕 UV、SampleSceneDepth Raw Depth、LinearEyeDepth 与 _ZBufferParams、View Space 的 `-positionVS.z`，以及同一屏幕位置沿视线方向的 `depthDiff`。用户自己归纳：限定一个 `_IntersectionWidth` 范围，越靠近深度差 0，`intersection=1-saturate(depthDiff/_IntersectionWidth)` 越高，再按权重人为叠加亮色。这不是三维 Mesh 真实相交线检测。
+- **F3 参考代码已在对话给出**：带中文 API 注释的 `Custom/TA_FresnelDepth` Shader、DebugMode `Final/RawDepth/EyeDepth/Intersection`；**本次未上传独立 Shader 源码，且没有用户在 Unity 实际运行该版本的确认**。
+- **关键教学修订（强制执行）**：先从要解决的渲染问题建立完整数据流和坐标/深度空间概念；讲公式为什么控制视觉；用已实际渲染的曲线/几何示意/参数滑块验证；逐一说明新 API 的用途、参数、返回值、调用时机与限制；最后才给完整 Shader 和集中实验。**不得只贴 Python 绘图脚本假装提供了图**。跳过已懂的基础算术和不必要的反复验收。
+- **唯一下一步**：GPU-04-F3 Unity 实际运行及 `RawDepth/EyeDepth/Intersection` 调试画面验收；确认深度纹理在透明物体前可用、交界宽度的视觉变化，遇问题按数据流排查。用户未给运行反馈前不标记 F3 通过。
+- **详情与跨对话恢复**：[`GPU_LOG_2026-11-16.md`](GPU_LOG_2026-11-16.md) 与 [`TA_HANDOFF_2026-11-16.md`](TA_HANDOFF_2026-11-16.md)。第 26 节关于“下一节 D8”仅为 2026-11-15 历史记录，不再是当前课程指令。
