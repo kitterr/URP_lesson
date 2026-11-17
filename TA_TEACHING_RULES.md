@@ -1,6 +1,6 @@
 # TA 教学与进度管理约定
 
-> 最后更新：2026-11-16。适用于 Unity 6 + URP Rendering TA 主线、Shader/HLSL、URP/Render Graph、工具与性能分析课程。本文是当前生效规则；与早期日志中冲突的教学安排，以本文为准，历史记录保留为当时状态。
+> 最后更新：2026-11-17。适用于 Unity 6 + URP Rendering TA 主线、Shader/HLSL、URP/Render Graph、工具与性能分析课程。本文是当前生效规则；与早期日志中冲突的教学安排，以本文为准，历史记录保留为当时状态。
 
 ## 1. 核心原则：高效、完整、以能力为目标
 
@@ -82,13 +82,13 @@
 - 当前主线：GPU 图形流水线 → ShaderLab/HLSL → Unity 6 URP 架构 → Render Graph → 自定义渲染功能/工具 → 真实项目调试与性能分析。
 - CPU Mini Software Renderer 原理学习已暂时收尾，不再作为 GPU/URP 主线的前置门槛；完整 CPU Renderer 仍可作为未来综合练习。
 - GPU-03 理论部分已结束；Depth Prepass/Depth Priming 对照有实际验证；Overdraw/Early-Z 性能测试主动延后，等待真实项目场景。
-- **截至 2026-11-16 的最新位置：GPU-04-F3 Scene Depth 交界发光，原理已理解、Unity 运行待验收。** F2 半透明 Fresnel 护盾概念与 Unity 实际运行通过；F1 Fresnel 概念通过，独立运行未确认；E1～E7 核心概念通过，逐项运行未确认。D8 GPU 性能实测由用户主动延后，不作为当前门槛。历史 D/C 细分状态保持，以最新 GPU 日志及知识台账为准。
+- **截至 2026-11-17 最新位置：C# 基础与 OOP 补强主线（CSharp-01 待开课）。** F2/F3/F4 已按实际反馈通过实践；GPU-05-A 已系统讲解；GPU-05-B 的 Renderer Feature 参考代码已给但用户无法理解，暂停实现、未验收。D8 GPU 性能实测继续延后。完整插入课程计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md)。
 - 教学主环境为 Unity 6 + URP。当前具体 Editor/URP Package 小版本未在 2026-11-10 重新核实；涉及版本差异的 API/源码教学前应核对。公司 Unity 2022.3.62f1 项目不能默认直接套用 Unity 6 代码。
 - 既定时间预算：工作日每天约 3 小时，周末两天合计约 5 小时。该预算是可用上限/计划，不是必须占满的时长；内容完成即可结束。
 
 ## 8. 新对话恢复流程
 
-1. 读取本文件、COURSE_MEMORY_2026.md、最新 GPU 学习日志（当前 GPU_LOG_2026-11-16.md）、TA_KNOWLEDGE_LEDGER.md 和最新 TA_HANDOFF 文件（当前 TA_HANDOFF_2026-11-16.md）。
+1. 读取本文件、COURSE_MEMORY_2026.md、TA_KNOWLEDGE_LEDGER.md、当前 C# 桥接计划 CSHARP_FOUNDATION_BRIDGE_PLAN.md、最新 GPU_LOG_2026-11-17.md 与 TA_HANDOFF_2026-11-17.md。
 2. 以最新日志为准，忽略已经被后续记录覆盖的旧“下一步”指令。
 3. 开始时用简短回顾说明当前阶段、已通过内容、未教学缺口和唯一下一步。
 4. 按“课程导航 → 系统讲解 → 有必要时集中实践 → 验收与记录”执行。
@@ -117,3 +117,14 @@
 - **数学或 Shader 视觉知识要真正显示图**：交互曲线、几何示意、能跟随 `_IntersectionWidth` 等参数变化的可视化优先；只提供 Python 绘图源代码而无真实图像，不能视为完成了可视化教学。
 - F3 中深度差是同一个屏幕像素对应视线上的 Eye Depth 差，不能称作两个 Mesh 的三维最近距离；发光是后续利用权重主动加颜色，不是深度差天然产生发光。应明确说明屏幕空间方法的假阳性、遮挡、透明排序等边界。
 - 在一个连续模块内，不必每教一个函数都出题；理论重点理解后直接进行能检验数据流的 Unity Debug 实验。分离“概念理解通过”与“Unity 运行通过”。
+
+
+## 12. 2026-11-17：C# 前置门槛与课程重排（当前优先）
+
+- 用户在 GPU-05-B 无法独立理解 C# 类型、对象/构造函数、继承重写、泛型与 Render Graph API 参数。**暂停整套 Renderer Feature 实现教学**，插入 8–12 次弹性集中 C# 课，分类型/方法、OOP、Unity API 阅读、返回 Render Graph 实现四阶段。
+- **时间预算不变**：工作日 3 小时/天、周末两天合计 5 小时、每周约 20 小时；变更仅重新分配课程内容，不能要求额外补课或追赶。
+- 原 2026-12-31、D01–D40 / T01–T08 视为历史参考；剩余 URP/Render Graph 和毕业项目可能顺延至 2027，不按日期强行标记通过。
+- 对新 C# 代码先讲用途、类型、变量/字段/参数、返回值、对象与构造函数、调用时机，再说明框架 API 和实际运行；鼓励通过 IDE 跳定义和官方文档自行查类型与签名，不让用户死记复杂模板。
+- **`Create()` 是生命周期重写方法，不是构造函数；构造函数不能 override；`new ZoomPass()` 执行对象创建与构造函数调用。**
+- 回归 GPU-05-B 的门槛：学员能独立阅读 `public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer frameData)`，识别所有类型/参数/方法语法，并能使用泛型、PassData、Lambda 以及资源句柄完成最小代码和 Unity 验证。见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md)。
+- **唯一下一课：CSharp-01**。现有 Shader 和 URP 概念进度保留，不从头清零。
