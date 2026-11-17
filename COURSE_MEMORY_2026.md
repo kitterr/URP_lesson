@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-17；性质：课程记录与训练协议；**当前主线已调整为 C# 基础/OOP/Unity API 阅读补强，下一课 CSharp-01；GPU-05-B Render Graph 实现暂停。F3/F4 已通过实践，GPU-05-A 已系统教学。** 原 D01–D40 / T01–T08 与 2026-12-31 时间窗为历史参考；最新计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与第 28 节。
+> 维护日期：2026-11-17；性质：课程记录与训练协议；**当前主线是 C# 基础/OOP/Unity API 阅读补强；CSharp-01 基础代码静态验收通过，CSharp-02 核心概念理解通过；下一课 CSharp-03；GPU-05-B Render Graph 实现仍暂停。F3/F4 已通过实践，GPU-05-A 已系统教学。** 原 D01–D40 / T01–T08 与 2026-12-31 时间窗为历史参考；最新计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与第 28 节。
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -268,5 +268,16 @@
 - **课程改为先补 C# 前置能力**：计划插入 8–12 次弹性集中课程，分四阶段：① 变量/类型/类/字段/方法 ② 对象/构造函数/OOP ③ Unity API 文档、生命周期、泛型/ref-out、Lambda/using ④ 返回 GPU-05-B 自主实现。8–12 次为初步估计，按实际门禁增减。
 - **总学习时间不增加**：周一～周五每天约 3 小时；周六日两天合计约 5 小时；每周约 20 小时。旧 D01–D40、T01–T08 和原 2026-12-31 日期作为历史课表/参考目标保留，剩余课程可能顺延到 2027，绝不为了赶原日历跳过能力门槛。
 - **教学顺序**：先讲代码用途和对象/类型/调用数据流，拆解字段、参数、返回值、生命周期，再介绍 API 和完整实现；逐项解释新语法而非直接抛 API 密集的 Renderer Feature。必须区分 `Create()` 是被重写的方法而非构造函数，`new ZoomPass()` 触发构造函数调用。
-- **唯一下一课**：CSharp-01——类、类型、字段、方法、构造函数和对象创建过程；先最小可读实例，再小规模独立实践。
+- **2026-11-17 课程调整时的下一课（历史）**：CSharp-01——已于当晚开展，后续进度见第 29 节。
 - **最新计划与交接**：[`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)、[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)、[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。第 27 节过期的“下一步 F3”仅作为历史状态保留。
+
+
+## 29. 2026-11-17 晚间 CSharp-01 / CSharp-02 增量（当前最新）
+
+- **CSharp-01：基础静态代码验收通过。** 用户独立提交 `ZoomPass` 类、`sampleScale` 字段、带参构造函数、`SetScale`/`GetScale`/`ResetScale` 方法及 MonoBehaviour 测试入口。ResetScale 第一稿多了参数，第二稿自主修正为 `public void ResetScale() { sampleScale = 1.0f; }`；最后 Start() 只对 b 调用 ResetScale，未同时对 a、b 调用。尚无 Unity 运行反馈，因此**不得记为实机通过**。
+- **CSharp-02：值/引用类型和默认按值传参概念验收通过。** 用户解释值类型赋值复制数据、引用类型复制引用；能解释 `Replace(ZoomPass pass) { pass = new ZoomPass(1.0f); }` 内部参数重定向不改变外部 a 引用；已纠正“值类型必在栈/引用类型必在堆”的简化，并讲过 string 不可变、Vector3/Transform、struct/class 与 ref。
+- **未验收**：Unity C# 运行、独立 struct/class 小项目、ref/out/in 编码，以及继承/override、泛型、Lambda、Render Graph 独立编写。
+- **当前唯一下一课**：CSharp-03——`ref`、`out`、`in`、方法签名与陌生 API 读法。跳过简单赋值重复验收，练真实 API 的参数/返回类型与独立实现。
+- **时间实证**：晚间约 20:34～21:34 的对话窗口，不等于精确专注学习时长；今日两个概念模块进展快，但含既有知识回忆。
+- **滚动估算**：到能重新独立理解与实现最小 URP Renderer Feature 的 C# 门槛，**剩余约 20–35 有效学习小时**（含编码调试），如果每周在原约 20 小时 TA 学习预算中分配 12–16 小时到 C#，约 **2–3 周**；并非保证 C# 全语言“学完”，以 CSharp-03 后的实际独立代码能力复核。
+- 详细进度记录见 [`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)；交接以 [`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md) 为准；计划详见 [`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)。
