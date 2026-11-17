@@ -1,6 +1,6 @@
 # TA 知识掌握台账 — Unity 6 URP Rendering TA
 
-> 更新日期：2026-11-15。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
+> 更新日期：2026-11-17。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
 
 ## 1. 状态定义
 
@@ -132,4 +132,20 @@
 | GPU-04-F3 TA_FresnelDepth Shader/四个 Debug 模式 | **参考代码已提供，Unity 编译/运行待验收** | Final/RawDepth/EyeDepth/Intersection；未取得用户运行结果 |
 | GPU-04-D8 GPU 性能分析 | **主动跳过/延后** | 留到真实项目，无性能结论 |
 
-**最新恢复指针**：`GPU_LOG_2026-11-16.md`、`TA_HANDOFF_2026-11-16.md`、`COURSE_MEMORY_2026.md`、`TA_TEACHING_RULES.md`。**唯一下一步：GPU-04-F3 Unity Raw/Eye/Intersection Debug 实践**。旧版 11-15 的 D8“下一节”已过期。
+**2026-11-16 历史恢复指针**：当时 F3 尚待运行；后续用户截图与 Debug 反馈已更新，以下第 10 节为当前状态。
+
+
+## 10. GPU-04-F3/F4、GPU-05 与 C# 前置能力（2026-11-17 当前有效）
+
+| 模块 | 状态 | 证据与边界 |
+|---|---|---|
+| GPU-04-F3 Scene Depth 与交界发光 | **实践已验收** | 用户上传交界发光截图，后续确认 Debug/效果正确；没有逐模式独立截图，不扩大证据表述 |
+| GPU-04-F4 Depth Prepass / Copy Depth / Depth Priming | **实践已验收（当前项目配置）** | Frame Debugger 对照截图：在关闭 Features/Priming 后 After Opaques 的 Opaque→CopyDepth、Force Prepass 的 DepthOnly→Opaque |
+| GPU-05-A URP / Render Graph 架构 | **已系统教学** | 讲过 Asset/Renderer/Feature/Pass、依赖、记录与执行，尚未进行独立 C# 实践验收 |
+| GPU-05-B ZoomPass Renderer Feature | **参考代码已提供，暂停/未验收** | 用户明确反映读不懂代码，没有提供 Unity 编译或 Render Graph Viewer 结果 |
+| C# 类型/变量/类/字段/参数/方法 | **需补强，CSharp-01 待开始** | 用户说明 C# 基础仍不牢固，不自动判已掌握 |
+| C# 对象/构造函数/继承/override | **需系统补强** | 必须辨别 `Create()` 生命周期方法与 `new ZoomPass()` 构造调用 |
+| Unity API 阅读、泛型/ref-out/Lambda/using | **需系统补强** | 不能因为之前的参考代码出现过就标记理解 |
+| GPU-04-D8 Profiling | **主动延后** | 留到真实项目，无性能数据 |
+
+**当前恢复指针**：[`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)、[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)、[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。唯一下一节 **CSharp-01**；8–12 次弹性集中训练，每周总预算约 20 小时不变。
