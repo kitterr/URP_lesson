@@ -71,7 +71,7 @@ public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer
 - GPU-04-F4：Depth Prepass / Copy Depth / Depth Priming 的独立变量对照与 Frame Debugger 截图，**实践通过**。控制 Renderer Features 和 Depth Priming 后明确看到 After Opaques 的 Opaque→CopyDepth、Force Prepass 的 DepthOnly→Opaque。
 - GPU-05-A：URP Asset / Renderer Data / Renderer Feature / ScriptableRenderPass / Render Graph 的架构**已系统讲解**，不能直接当作独立实践验收。
 - GPU-05-B：`TA_RenderGraphZoomFeature` 完整参考示例已提供，**理解/独立编写/Unity 运行均未验收，暂停**。
-- **下次唯一开课：CSharp-01**。先用简短的 `ZoomPass` 类做“类/类型/变量/字段/方法/构造函数”的全流程解释和小实践；之后再逐步讲 OOP 与 Unity API。
+- **2026-11-17 晚间新增进度**：CSharp-01 的简化 ZoomPass 代码静态验收通过，CSharp-02 值/引用类型与参数默认按值传递的核心概念理解通过（Unity 实机/独立 ref/out/in 待验收）。**最新唯一下一课：CSharp-03，ref/out/in 与方法签名、陌生 API 读法。**
 - GPU-04-D8 Profiler/复杂性能测量继续按此前决定延后到真实项目。
 
 ## 7. 历史和跨对话恢复
@@ -80,3 +80,13 @@ public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer
 
 最新日志：[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)。
 最新交接：[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。
+
+
+## 8. 2026-11-17 晚间进度与滚动课时估计（最新）
+
+- 已完成 **CSharp-01 简单代码静态检查**（用户自行修复无参数 ResetScale 的实现）；**CSharp-02 概念验收**（值/引用类型、参数按值传递、Replace(a) 与共享对象区别）。未见 Unity 实际运行证据，不标记实际运行通过。
+- 学习窗口大致在北京时间 20:34–21:34 之间，约 1 小时是对话时间差，**不是精确有效学习时长**。前两模块有既有知识回忆成分，不能外推复杂 C# API 学习速度。
+- 原先 8–12 次、每次约 2–3 小时是初始课程框架（16–36 小时）。根据首次反馈，规划**剩余约 20–35 小时有效学习＋独立编码调试**，其中应留充足的 OOP 和真实 API 阅读时间。这是保守滚动预算，不是必须按时结束的承诺。
+- 若每周约 20 小时总学习预算中能稳定分配约 12–16 小时到 C#，约 **2–3 周**可进行返回 GPU-05-B 的能力验收。若实际分配更少/出现缺口，顺延；若效率更高也要先完成独立代码验收才缩短。
+- **不承诺“完全学完 C#”**：本阶段目标仅为能独立读懂、编写、调试 Unity TA/URP 需要的核心 C#；后续形成独立生产级工程能力还需要持续真实项目实践。
+- **下次唯一课：CSharp-03**。先学习 `ref/out/in` 与签名结构；对原先旧版“下一节 CSharp-01”指针按历史看待。
