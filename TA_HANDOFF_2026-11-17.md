@@ -3,13 +3,13 @@
 > 仓库：`kitterr/URP_lesson`；唯一课程记录分支：`study/urp-ta-course-memory-2026`；main 不修改。
 > **当前主线已转为 C# 基础与 OOP 补强**。以 [`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 为计划依据。旧 GPU_LOG/TA_HANDOFF 的“下一节 F3 / D8”均属过期历史。
 
-## 唯一下一课：CSharp-01
+## 晚间更新后的唯一下一课：CSharp-03
 
-**类、类型、字段、局部变量、方法、构造函数和对象创建顺序。**
+**ref / out / in、方法签名及陌生 Unity API 阅读。**
 
 用户在 GPU-05-B 直言当前无法看懂 Render Graph C# 示例，尤其是 API 参数类型、构造函数、对象、继承及 override。不要再立即展开 Render Graph 实现，先通过小案例建立 C# 阅读和独立编程能力。
 
-固定讲法：先展示简短可完整读懂的 `ZoomPass` 类→逐项拆关键字与声明（类型/变量/参数/返回值）→解释 `new`、构造函数与方法调用时机→少量独立编码并验收。**`Create()` 是重写的方法，不是构造函数；构造函数不能 override。**
+已在晚间使用简短 ZoomPass 类完成 CSharp-01 的基础代码检查；用户自主将无参 ResetScale 写对。CSharp-02 的值/引用类型与参数默认按值传递，经用户解释 Replace(a) 的结果，概念通过。下一节不重复这些基础题，转向 ref/out/in、方法签名与 API 读法。**`Create()` 是重写的方法，不是构造函数；构造函数不能 override。**
 
 ## 课时调整
 
@@ -33,8 +33,16 @@
 2. 用 IDE 查找类定义与官方文档作为训练，不背 API，不堆新术语。
 3. 不以简单算数题消耗时间；验收侧重阅读陌生代码、解释调用流程、独立实现和故障定位。
 4. 对数学/Shader 仍要提供真实可见的公式曲线/示意图，不可只贴绘图代码。
-5. 没有用户操作反馈，不把 CSharp-01 或 GPU-05-B 标记完成。
+5. CSharp-01 仅**简单代码静态验收通过**，不是 Unity 实机运行通过；CSharp-02 **核心概念理解确认**，独立 ref/out/in 和 Unity 运行未验收；GPU-05-B 未通过。
 
 ## 新对话恢复口令
 
-“请读取 `kitterr/URP_lesson` 的 `study/urp-ta-course-memory-2026` 分支中的 `COURSE_MEMORY_2026.md`、`TA_TEACHING_RULES.md`、`TA_KNOWLEDGE_LEDGER.md`、`CSHARP_FOUNDATION_BRIDGE_PLAN.md`、`GPU_LOG_2026-11-17.md`、`TA_HANDOFF_2026-11-17.md`。恢复当前 C# 补强主线，按原定每周约 20 小时、8–12 次弹性课时开始 CSharp-01；GPU-05-B 暂停，别直接丢完整 Renderer Feature。”
+“请读取 `kitterr/URP_lesson` 的 `study/urp-ta-course-memory-2026` 分支中的 `COURSE_MEMORY_2026.md`、`TA_TEACHING_RULES.md`、`TA_KNOWLEDGE_LEDGER.md`、`CSHARP_FOUNDATION_BRIDGE_PLAN.md`、`GPU_LOG_2026-11-17.md`、`TA_HANDOFF_2026-11-17.md`。恢复当前 C# 补强主线，按每周约 20 小时预算继续 CSharp-03：ref/out/in、方法签名、陌生 API 读法；CSharp-01 简单代码静态通过，CSharp-02 概念通过；剩余 C# 学习初步预算约 20–35 小时、约 2–3 周（每周约 12–16 小时分配 C#，需实际验收）；GPU-05-B 暂停，别直接丢完整 Renderer Feature。”
+
+
+## 2026-11-17 晚间时间估计与证据边界
+
+- 约 20:34–21:34 的**对话时间窗口**内推进 CSharp-01 静态代码与 CSharp-02 概念；这不是计时器记录的纯学习时间。不要据此认定用户 C# 已全面提速。
+- CSharp-01：ResetScale 初版参数设计不符要求，后来自行修正无参方法；Start 最终只对 b 调用 Reset，不是两者，Unity 实机运行没有确认。
+- CSharp-02：能够独立解释普通引用类型参数 `pass = new ZoomPass()` 不影响外部 `a`；纠正堆/栈简化，ref/out/in 尚待系统实践。
+- **剩余 C# 桥接估算：约 20–35 有效小时，日历约 2–3 周（若每周投入 C# 12–16 小时）**。目标是恢复 Unity TA/URP API 自主开发能力，不是掌握 C# 的一切；到 CSharp-03 后依据独立代码的错误率与实践时间复核估算。
