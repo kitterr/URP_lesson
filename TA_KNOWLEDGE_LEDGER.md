@@ -143,9 +143,23 @@
 | GPU-04-F4 Depth Prepass / Copy Depth / Depth Priming | **实践已验收（当前项目配置）** | Frame Debugger 对照截图：在关闭 Features/Priming 后 After Opaques 的 Opaque→CopyDepth、Force Prepass 的 DepthOnly→Opaque |
 | GPU-05-A URP / Render Graph 架构 | **已系统教学** | 讲过 Asset/Renderer/Feature/Pass、依赖、记录与执行，尚未进行独立 C# 实践验收 |
 | GPU-05-B ZoomPass Renderer Feature | **参考代码已提供，暂停/未验收** | 用户明确反映读不懂代码，没有提供 Unity 编译或 Render Graph Viewer 结果 |
-| C# 类型/变量/类/字段/参数/方法 | **需补强，CSharp-01 待开始** | 用户说明 C# 基础仍不牢固，不自动判已掌握 |
-| C# 对象/构造函数/继承/override | **需系统补强** | 必须辨别 `Create()` 生命周期方法与 `new ZoomPass()` 构造调用 |
+| C# 类型/变量/类/字段/参数/方法 | **CSharp-01 简单代码静态验收通过** | ZoomPass 构造函数、字段、SetScale/GetScale/ResetScale；重置方法第二次改对。Unity 实机未确认 |
+| C# 对象/构造函数/继承/override | **基础对象创建与带参构造函数代码通过；继承/override 待专项训练** | 已写 new ZoomPass、构造函数与实例方法；Unity Create() 框架回调机制尚未实战验收 |
 | Unity API 阅读、泛型/ref-out/Lambda/using | **需系统补强** | 不能因为之前的参考代码出现过就标记理解 |
 | GPU-04-D8 Profiling | **主动延后** | 留到真实项目，无性能数据 |
 
-**当前恢复指针**：[`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)、[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)、[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。唯一下一节 **CSharp-01**；8–12 次弹性集中训练，每周总预算约 20 小时不变。
+**2026-11-17 晚间之前的恢复指针**：当时下一节为 CSharp-01；当前已进入下方第 11 节，以最新状态为准。
+
+
+## 11. 2026-11-17 晚间 C# 学习增量（当前有效）
+
+| 分节/知识点 | 最新证据等级 | 限制与证据 |
+|---|---|---|
+| CSharp-01：class / 字段 / 方法 / 参数 / 返回值 / 带参构造函数 | **基础静态代码验收通过** | 用户自己提交 ZoomPass/CSharp01Demo，并将 ResetScale(float) 修正为无参数复位 1.0f；实际未证明在 Unity 编译运行；Start() 未同时 reset a、b |
+| CSharp-02：值类型/引用类型、共享对象与复制 | **理解已确认** | 用户自己解释 a=b 的值/引用差别，认识字符串、数组、类、字典的类型特点；“值类型=栈”的误区已纠正 |
+| CSharp-02：方法参数按值传递与引用参数 | **理解已确认** | 用户解释 Replace(a) 重新赋值内部 pass 不改变外部 a 的引用；“改对象”与“改引用变量”区别正确 |
+| CSharp-02：struct 与 class、Vector3 与 Transform | **理论已系统讲解；独立代码实践待验收** | 未见用户独立提交自定义 struct/class 或 Unity 运行结果 |
+| CSharp-02：ref 作为变量别名 | **已系统讲解，独立练习未验收** | 用户确认无 ref 时引用变量独立；尚未提交有 ref 的实际例子 |
+| CSharp-03：ref / out / in 与方法签名、API 阅读 | **下一课；尚未验收** | 先补 ref/out/in 与陌生 API 读法，后续再深挖 OOP / 泛型 / Lambda |
+
+**最新恢复位置**：**CSharp-03**。时间估计仅为假设：剩余约 20–35 小时有效学习与编码调试；按每周约 12–16 小时安排 C#，约 2–3 周可尝试回到 GPU-05-B，必须经实际能力验收，不把概念速度当实战速度。详见 [`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与 [`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)。
