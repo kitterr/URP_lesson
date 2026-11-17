@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-16；性质：课程记录与训练协议，不是程序源代码；**当前主线 GPU-04-F3 Scene Depth 交界发光：原理理解已确认，Unity 运行/Debug 待验收；F2 Fresnel+Alpha Blend 已在 Unity 运行通过；D8 性能实测已主动延后。** 历史 GPU-01～03、MSR 与 GPU-04-D 记录保留；最新分项状态见第 27 节及 GPU_LOG_2026-11-16.md。
+> 维护日期：2026-11-17；性质：课程记录与训练协议；**当前主线已调整为 C# 基础/OOP/Unity API 阅读补强，下一课 CSharp-01；GPU-05-B Render Graph 实现暂停。F3/F4 已通过实践，GPU-05-A 已系统教学。** 原 D01–D40 / T01–T08 与 2026-12-31 时间窗为历史参考；最新计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与第 28 节。
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -247,7 +247,7 @@
 - **详情：** [GPU_LOG_2026-11-15.md](GPU_LOG_2026-11-15.md)；**恢复课程请优先阅读** [TA_HANDOFF_2026-11-15.md](TA_HANDOFF_2026-11-15.md) 及 [TA_TEACHING_RULES.md](TA_TEACHING_RULES.md)、[TA_KNOWLEDGE_LEDGER.md](TA_KNOWLEDGE_LEDGER.md)。此前第 25 节关于“下一步进入 GPU-04 架构”的指示已被本节覆盖，保留为历史快照。
 
 
-## 27. 2026-11-16 最新进度：GPU-04-F2 实践通过，F3 理解已确认、待运行（当前有效）
+## 27. 2026-11-16 历史进度快照：F2 通过、F3 当时待运行（已被第 28 节覆盖）
 
 - **GPU-04-D8 Profiler / 性能测试：主动延后**。用户决定不为单纯对比 Vertex SH 与 Pixel SH 做低价值合成性能测量；未来结合真实复杂 URP 项目实际瓶颈再学习 Profiler、Frame Debugger、RenderDoc。没有任何本节 GPU 耗时实测证据。
 - **GPU-04-E1～E7 渲染状态：核心概念通过，逐项 Unity 运行未确认。** 包括 Cull（由屏幕三角形绕序决定而非顶点法线）、ZTest/ZWrite、透明对象排序与混合、普通 Alpha/加法/预乘 Blend、clip、Stencil、Stencil+Depth X-Ray。不能把概念理解当作每节的实现验收；涉及 Reversed-Z 的 ZTest/GPU 比较行为，应按平台/官方源码实际校验。
@@ -258,3 +258,15 @@
 - **关键教学修订（强制执行）**：先从要解决的渲染问题建立完整数据流和坐标/深度空间概念；讲公式为什么控制视觉；用已实际渲染的曲线/几何示意/参数滑块验证；逐一说明新 API 的用途、参数、返回值、调用时机与限制；最后才给完整 Shader 和集中实验。**不得只贴 Python 绘图脚本假装提供了图**。跳过已懂的基础算术和不必要的反复验收。
 - **唯一下一步**：GPU-04-F3 Unity 实际运行及 `RawDepth/EyeDepth/Intersection` 调试画面验收；确认深度纹理在透明物体前可用、交界宽度的视觉变化，遇问题按数据流排查。用户未给运行反馈前不标记 F3 通过。
 - **详情与跨对话恢复**：[`GPU_LOG_2026-11-16.md`](GPU_LOG_2026-11-16.md) 与 [`TA_HANDOFF_2026-11-16.md`](TA_HANDOFF_2026-11-16.md)。第 26 节关于“下一节 D8”仅为 2026-11-15 历史记录，不再是当前课程指令。
+
+
+## 28. 2026-11-17 当前生效：C# 基础补强，GPU-05-B 暂停
+
+- **GPU-04-F3 实践通过**：用户上传 Fresnel Depth 交界亮带的 Unity 截图，并明确反馈 Debug/效果正确；没有收到每种 Debug 模式的独立截图，不扩大证据范围。
+- **GPU-04-F4 实践通过（限定当前 Unity/URP 环境）**：在关闭 Renderer Features 和 Depth Priming 后，Frame Debugger 显示 After Opaques：Opaque → CopyDepth；Force Prepass：DepthOnly → Opaque；Depth Priming Auto 下流程可能趋同。记录本机对照，不声称跨平台恒定。
+- **GPU-05-A（URP 架构与 Render Graph）**：已系统讲解但尚未完成独立理解/编程验收。**GPU-05-B（TA_RenderGraphZoomFeature）**：已提供参考代码，用户无法读懂类型、对象、构造函数、继承/override、API 参数；暂停实现，尚无 Unity 编译/运行验收。
+- **课程改为先补 C# 前置能力**：计划插入 8–12 次弹性集中课程，分四阶段：① 变量/类型/类/字段/方法 ② 对象/构造函数/OOP ③ Unity API 文档、生命周期、泛型/ref-out、Lambda/using ④ 返回 GPU-05-B 自主实现。8–12 次为初步估计，按实际门禁增减。
+- **总学习时间不增加**：周一～周五每天约 3 小时；周六日两天合计约 5 小时；每周约 20 小时。旧 D01–D40、T01–T08 和原 2026-12-31 日期作为历史课表/参考目标保留，剩余课程可能顺延到 2027，绝不为了赶原日历跳过能力门槛。
+- **教学顺序**：先讲代码用途和对象/类型/调用数据流，拆解字段、参数、返回值、生命周期，再介绍 API 和完整实现；逐项解释新语法而非直接抛 API 密集的 Renderer Feature。必须区分 `Create()` 是被重写的方法而非构造函数，`new ZoomPass()` 触发构造函数调用。
+- **唯一下一课**：CSharp-01——类、类型、字段、方法、构造函数和对象创建过程；先最小可读实例，再小规模独立实践。
+- **最新计划与交接**：[`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)、[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)、[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。第 27 节过期的“下一步 F3”仅作为历史状态保留。
