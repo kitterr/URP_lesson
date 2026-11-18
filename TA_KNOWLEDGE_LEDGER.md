@@ -1,6 +1,6 @@
 # TA 知识掌握台账 — Unity 6 URP Rendering TA
 
-> 更新日期：2026-11-17。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
+> 更新日期：2026-11-18。用于跨对话区分“教过什么”和“用户是否掌握”，避免把只提过的术语当成已学会。详细日期和证据见对应 GPU/MSR 学习日志。
 
 ## 1. 状态定义
 
@@ -162,4 +162,23 @@
 | CSharp-02：ref 作为变量别名 | **已系统讲解，独立练习未验收** | 用户确认无 ref 时引用变量独立；尚未提交有 ref 的实际例子 |
 | CSharp-03：ref / out / in 与方法签名、API 阅读 | **下一课；尚未验收** | 先补 ref/out/in 与陌生 API 读法，后续再深挖 OOP / 泛型 / Lambda |
 
-**最新恢复位置**：**CSharp-03**。时间估计仅为假设：剩余约 20–35 小时有效学习与编码调试；按每周约 12–16 小时安排 C#，约 2–3 周可尝试回到 GPU-05-B，必须经实际能力验收，不把概念速度当实战速度。详见 [`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与 [`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)。
+**2026-11-17 历史恢复位置**：CSharp-03；当前最新位置见下方第 12 节。
+
+
+## 12. 2026-11-18 CSharp-04 / CSharp-05 最新知识台账
+
+| 知识点 | 最新状态 | 证据与边界 |
+|---|---|---|
+| Property 声明、getter / setter、`value` | **基础语法理解通过** | 用户独立写出 SampleScale get/set 属性，语法结构正确；未完成 Clamp setter 的独立实现 |
+| Property 自定义逻辑、自动属性、private set | **已系统教学** | 了解读取/写入时执行访问器及控制写权限；独立编码未验收 |
+| `this`、字段初始化、构造函数初始化 | **已系统教学** | 解释当前实例字段与同名参数的区别；独立编码未验收 |
+| Unity `transform.position` 属性与 Vector3 值语义 | **已系统教学** | 讲解 getter 返回值、局部副本修改后需重新 setter 写回；未做 Unity 实机验证 |
+| Unity Inspector 字段与 C# 属性序列化 | **已系统教学** | 已说明 Unity 默认序列化字段，不将普通属性误认为 Inspector 序列化字段 |
+| 类继承、父类/子类、protected/private | **已系统教学；概念理解有证据** | 通过代码讲解访问范围和继承成员；尚无独立类实现验收 |
+| `: base(args)` 与父类构造函数 | **概念验收通过** | 用户正确说明调用父类构造函数及参数类型改变后的实参调整 |
+| `base.Method()` | **概念验收通过** | 用户正确区分父类普通方法调用与构造函数初始化器 |
+| `virtual` / `override` / 运行时多态 | **代码阅读理解通过** | BAC、D、BC 三项追踪正确；未独立编写运行 |
+| `abstract class` / `abstract method` | **系统教学；一个关键边界经纠正** | 父类需改成 abstract class；子类保留 override 实现但移除对不存在的 base abstract 方法体的调用 |
+| Unity Renderer Feature 生命周期重写 | **原理联系已讲；未实机验收** | 理解 override 与基类契约的关系；未重新实现/运行 Renderer Feature |
+
+**唯一下一课：CSharp-06 — Interface 与多态实践。** CSharp-04/05 目前主要为语法、概念和代码阅读证据，不能记为 Unity 实机实践通过。用户已要求跳过低价值简单代码练习，且后续测验不可预先暴露答案。详见 [`GPU_LOG_2026-11-18.md`](GPU_LOG_2026-11-18.md) 与 [`TA_HANDOFF_2026-11-18.md`](TA_HANDOFF_2026-11-18.md)。
