@@ -1,5 +1,5 @@
 # Unity 6 URP Rendering TA 学习计划与跨对话交接（2026）
-> 维护日期：2026-11-17；性质：课程记录与训练协议；**当前主线是 C# 基础/OOP/Unity API 阅读补强；CSharp-01 基础代码静态验收通过，CSharp-02 核心概念理解通过；下一课 CSharp-03；GPU-05-B Render Graph 实现仍暂停。F3/F4 已通过实践，GPU-05-A 已系统教学。** 原 D01–D40 / T01–T08 与 2026-12-31 时间窗为历史参考；最新计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与第 28 节。
+> 维护日期：2026-11-18；性质：课程记录与训练协议；**当前主线是 C# 基础/OOP/Unity API 阅读补强；CSharp-01～03 已完成相应基础/概念验收，CSharp-04 Property 语法理解通过，CSharp-05 继承与 virtual/abstract/override 概念验收进行中；下一课 CSharp-06：Interface 与多态实践；GPU-05-B Render Graph 实现仍暂停。F3/F4 已通过实践，GPU-05-A 已系统教学。** 原 D01–D40 / T01–T08 与 2026-12-31 时间窗为历史参考；最新计划见 [CSHARP_FOUNDATION_BRIDGE_PLAN.md](CSHARP_FOUNDATION_BRIDGE_PLAN.md) 与第 30 节。
 
 ## 0. 学习者背景与方向
 - 学习者主要来自 3D 场景地编、美术与 Houdini/VEX 背景，C#/Python 了解基础语法，HLSL、图形学、数学和 GPU 渲染需要从基础建立，不默认已会。
@@ -281,3 +281,29 @@
 - **时间实证**：晚间约 20:34～21:34 的对话窗口，不等于精确专注学习时长；今日两个概念模块进展快，但含既有知识回忆。
 - **滚动估算**：到能重新独立理解与实现最小 URP Renderer Feature 的 C# 门槛，**剩余约 20–35 有效学习小时**（含编码调试），如果每周在原约 20 小时 TA 学习预算中分配 12–16 小时到 C#，约 **2–3 周**；并非保证 C# 全语言“学完”，以 CSharp-03 后的实际独立代码能力复核。
 - 详细进度记录见 [`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)；交接以 [`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md) 为准；计划详见 [`CSHARP_FOUNDATION_BRIDGE_PLAN.md`](CSHARP_FOUNDATION_BRIDGE_PLAN.md)。
+
+
+## 30. 2026-11-18 CSharp-04 / CSharp-05 学习增量（当前最新）
+
+### CSharp-04：Property、get/set、this 与初始化
+
+- **Property 基础语法理解通过。** 用户独立提交了 `public float SampleScale { get { return sampleScale; } set { sampleScale = value; } }`，getter 返回字段、setter 使用自动提供的 `value`，语法结构正确。
+- 已系统讲解属性读写时 getter/setter 的调用机制、在 setter 中插入 Clamp 等数据约束、自动属性、`private set`、`this` 区分当前实例字段与同名参数、字段初始化和构造函数初始化。
+- 已联系 Unity 的 `transform.position` 说明属性 getter/setter；其 getter 返回 Vector3 值，直接写 `transform.position.x = ...` 不能自动写回，需要读出局部 Vector3、修改后重新赋值；并说明 Unity Inspector 默认序列化字段而非普通 C# 属性。
+- 用户明确跳过剩余简单代码练习。因此 **Clamp setter、构造函数通过属性赋值、this 与 Unity 属性代码均未独立编码/Unity 实机验收**；不可将整节标为实践通过。
+
+### CSharp-05：继承、base、virtual/abstract/override
+
+- **继承与成员访问已系统教学。** 包括 `:` 继承声明、父类/子类可访问成员、`protected` 与 `private` 区别、子类实例包含继承成员而非运行时复制父类独立对象、派生类对象可由父类类型变量引用。
+- **base 调用链概念验收通过。** 用户正确解释 `: base(10)` 调用父类构造函数、`base.Initialize()` 调用父类普通方法；能判断父类参数从 `int` 改为 `string` 后子类应传入字符串实参。示例输出顺序为父类构造函数→子类构造函数；在子类构造函数体内调用 base 方法则发生在父类构造和子类构造初始化器之后。
+- **virtual/abstract/override 多态代码阅读：前三项通过，第四项部分正确并经讲解纠正。** 用户正确推导 `passA.Execute()` 输出 BAC、`passB.Execute()` 输出 D、删除 `base.Execute()` 后 BlurPass 输出 BC。第四项用户指出 BlurPass 代码要改变，方向正确但未明确说出：父类改为 `abstract void Execute()` 后，父类本身也必须声明为 abstract class；BlurPass 保留 `override` 实现，但移除 `base.Execute()`，因为抽象方法没有父类方法体可供调用。
+- 已讲清 `virtual` 是父类有默认实现且允许重写；`abstract` 只规定契约、不提供方法体；`override` 在派生类重写/实现父类虚/抽象方法；虚方法调用按实际对象运行时类型分派；override 不会自动调用父类实现，只有显式 `base.Method()` 才调用父类实现。
+- **实践边界：** 本轮没有用户独立编写完整继承/virtual/abstract/override 类，也没有 Unity 编译运行或工程截图；属于概念与代码阅读验收，不是实机实践通过。
+
+### 下一步
+
+- **唯一下一课：CSharp-06 — Interface（接口）与多态实践。** 对比 interface 与 abstract class、一个类实现多个接口、接口类型引用不同实现对象，并使用简洁渲染功能例子建立多态的实际用途。
+- 不重复简单属性/构造函数/赋值题；以陌生代码解释、方法调用追踪和有意义的独立实现为验收。
+- 用户指出此前选择题选项曾直接暴露答案。后续不预填/不标示正确选项，不用答案泄露式选择题；优先开放式代码阅读、独立代码和解释调用流程。
+- **GPU-05-B 继续暂停**，直到 C# API 阅读、继承/接口、泛型/委托/Lambda/using 等门槛按实际验收完成。
+- 详细记录见 [GPU_LOG_2026-11-18.md](GPU_LOG_2026-11-18.md)；最新交接见 [TA_HANDOFF_2026-11-18.md](TA_HANDOFF_2026-11-18.md)。
