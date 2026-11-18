@@ -71,15 +71,15 @@ public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer
 - GPU-04-F4：Depth Prepass / Copy Depth / Depth Priming 的独立变量对照与 Frame Debugger 截图，**实践通过**。控制 Renderer Features 和 Depth Priming 后明确看到 After Opaques 的 Opaque→CopyDepth、Force Prepass 的 DepthOnly→Opaque。
 - GPU-05-A：URP Asset / Renderer Data / Renderer Feature / ScriptableRenderPass / Render Graph 的架构**已系统讲解**，不能直接当作独立实践验收。
 - GPU-05-B：`TA_RenderGraphZoomFeature` 完整参考示例已提供，**理解/独立编写/Unity 运行均未验收，暂停**。
-- **2026-11-17 晚间新增进度**：CSharp-01 的简化 ZoomPass 代码静态验收通过，CSharp-02 值/引用类型与参数默认按值传递的核心概念理解通过（Unity 实机/独立 ref/out/in 待验收）。**最新唯一下一课：CSharp-03，ref/out/in 与方法签名、陌生 API 读法。**
+- **截至 2026-11-18 最新进度**：CSharp-01 基础代码静态验收通过；CSharp-02 值/引用与参数传递概念通过；CSharp-03 的 out、重载、可选/命名参数、访问修饰符与封装完成讲解及相应概念验收（ref/in 独立编码仍待验收）；CSharp-04 Property 基础语法理解通过；CSharp-05 继承/base/virtual/abstract/override 代码阅读概念验收通过（抽象方法边界已纠正）。CSharp-04/05 未完成 Unity 实机实践。**最新唯一下一课：CSharp-06，Interface 与多态实践。**
 - GPU-04-D8 Profiler/复杂性能测量继续按此前决定延后到真实项目。
 
 ## 7. 历史和跨对话恢复
 
 本计划是自 2026-11-17 起对 `COURSE_MEMORY_2026.md` 第 3 节原课表的**前置插入与动态延期**；旧课表作为历史方向与课程骨架保存，不当作未来必须按原日期逐日执行的进度命令。
 
-最新日志：[`GPU_LOG_2026-11-17.md`](GPU_LOG_2026-11-17.md)。
-最新交接：[`TA_HANDOFF_2026-11-17.md`](TA_HANDOFF_2026-11-17.md)。
+最新日志：[`GPU_LOG_2026-11-18.md`](GPU_LOG_2026-11-18.md)。
+最新交接：[`TA_HANDOFF_2026-11-18.md`](TA_HANDOFF_2026-11-18.md)。
 
 
 ## 8. 2026-11-17 晚间进度与滚动课时估计（最新）
@@ -90,3 +90,16 @@ public override void RecordRenderGraph(RenderGraph renderGraph, ContextContainer
 - 若每周约 20 小时总学习预算中能稳定分配约 12–16 小时到 C#，约 **2–3 周**可进行返回 GPU-05-B 的能力验收。若实际分配更少/出现缺口，顺延；若效率更高也要先完成独立代码验收才缩短。
 - **不承诺“完全学完 C#”**：本阶段目标仅为能独立读懂、编写、调试 Unity TA/URP 需要的核心 C#；后续形成独立生产级工程能力还需要持续真实项目实践。
 - **下次唯一课：CSharp-03**。先学习 `ref/out/in` 与签名结构；对原先旧版“下一节 CSharp-01”指针按历史看待。
+
+
+## 9. 2026-11-18 最新进度与下一步
+
+- **CSharp-04 Property**：用户独立提交 `SampleScale` 的 get/set 访问器，语法正确；后续因用户判断练习过于简单而跳过完整 ZoomPass/Clamp/构造函数练习。故记录为基础语法理解通过，不记 Unity 运行或完整实践通过。
+- **CSharp-05 继承与 base**：完成类继承、父类/派生类成员、protected/private、父类构造函数执行顺序、`: base(args)` 与 `base.Method()` 区别讲解。用户对 base 构造函数、父类方法调用和父类参数类型改变后的调用修正回答正确。
+- **CSharp-05 多态**：用户代码阅读验收中正确追踪 BAC、D、BC 三种输出；对 virtual 改 abstract 的第四题回答部分正确，已补充“父类必须声明 abstract class；派生类保留 override，但不能调用不存在的 abstract 父类方法体”。
+- **下一课唯一指针：CSharp-06 — Interface 与多态实践**。讲解 interface vs abstract class、一个类实现多个接口、接口变量引用不同实现对象；使用小型渲染功能例子练习。
+- **证据边界**：本次进度没有 Unity 实机编译/运行证据；CSharp-04/05 主要是语法、概念与代码阅读验收。不得将其写成工程实践通过。
+- **教学方式调整**：用户指出选择题直接暴露答案；后续不再预填或突出正确选项，优先使用开放式代码追踪、API 阅读和独立实现；跳过已理解的低价值简单练习。
+- GPU-05-B 仍暂停，直到 C# 阅读与编码能力达到计划第 5 节的实际门槛。
+
+详细日志：[`GPU_LOG_2026-11-18.md`](GPU_LOG_2026-11-18.md)。交接卡：[`TA_HANDOFF_2026-11-18.md`](TA_HANDOFF_2026-11-18.md)。
